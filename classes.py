@@ -9,13 +9,14 @@ class house(object):
         self.x_right = x_right
         self.y_right = y_right
         self.dist = dist
-        self.name = house_type.name
-        self.width = house_type.width
-        self.height = house_type.height
-        self.price = house_type.price
-        self.perc = house_type.perc
+        self.name = house_type[0]
+        self.type_number = house_type[1]
+        self.width = house_type[2]
+        self.height = house_type[3]
+        self.price = house_type[4]
+        self.perc = house_type[5]
         # minimale VERPLICHTE AFSTAND
-        self.min_dist = house_type.min_dist
+        self.min_dist = house_type[6]
 
     def get_index(self):
         return self.index        
