@@ -51,13 +51,12 @@ def func(x1,y1,x2,y2, idx):
     third_condition = (y1 <= filled_houses_mat[:, 3]).astype(int) + ((((filled_houses_mat[:, 0] <=  x1).astype(int) + (x1 <= filled_houses_mat[:, 2]).astype(int)) == 2) + (((filled_houses_mat[:, 0] <=  x2).astype(int) + (x2 <= filled_houses_mat[:, 2]).astype(int)) == 2) >=1) ==2        
     seventh_condition = (y2 >= filled_houses_mat[:, 1]).astype(int) + ((((filled_houses_mat[:, 3] <=  x1).astype(int) + (x1 <= filled_houses_mat[:, 1]).astype(int)) == 2) + (((filled_houses_mat[:, 3] <=  x2).astype(int) + (x2 <= filled_houses_mat[:, 1])) == 2 )>=1) == 2              
     
-    a = [second_condition, fourth_condition, sixth_condition, eight_condition, third_condition, fifth_condition, seventh_condition]
+    a = [first_condition, second_condition, fourth_condition, sixth_condition, eight_condition, third_condition, fifth_condition, seventh_condition]
       
     a = np.array(a)
     
-
-    if all(a.sum(0) <= 1):
-        print(a)
+    print(a)
+    if all(a.sum(0) == 1):
         return 0
     else:
         return 1
