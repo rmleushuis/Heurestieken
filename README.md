@@ -67,5 +67,6 @@ python main.py
 
 ## Dankwoord
 
+* Quinten van der Post
 * StackOverflow
 * minor programmeren van de UvA
