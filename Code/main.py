@@ -31,3 +31,5 @@ def starting_sol(x):
  
 # create starting solution for first version of problem
 starting_sol(total_houses[0])
+starting_sol(total_houses[1])
+starting_sol(total_houses[2])
