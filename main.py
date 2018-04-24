@@ -14,8 +14,6 @@ from global_vars import perc_solo, perc_bung, perc_vil
 # define the 3 versions of the problem
 total_houses = [20, 40, 60]
 
-
-
 def starting_sol(x):
     # create an empty house matrix [x_1 y_1 x_2 y_2 house_type free_space]
     house_mat = np.zeros(shape = (x, 8))
