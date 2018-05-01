@@ -36,11 +36,14 @@ class Start_sol():
                 if i != 0:
                     valid, distance = check_house(house_matrix[i, 0], house_matrix[i, 1], 
                                                   house_matrix[i, 2], house_matrix[i, 3], i, 
-                                                  house_matrix, house_matrix[i, 7])
+                                                  house_matrix, house_matrix[i, 9])
+                    #print(i,valid)
                     if valid == 0:
                         self.distance_mat[i, :i] = distance
                         show_grid.draw_house(house_matrix[i, :], i)
                         break
+                    else:
+                        continue
                     
                 show_grid.draw_house(house_matrix[i, :], i)
                 break
@@ -50,7 +53,7 @@ class Start_sol():
         
         # store the minimum distance in the last column of the matrix in the class
         house_matrix[:, 8] = np.min(self.distance_mat, axis = 0)
-        print(house_matrix)
+        
         self.house.set_house_matrix(house_matrix)
         
         return self.house
@@ -75,5 +78,5 @@ class Start_sol():
               high = GRID['height'] - cur_house_free)
         matrix[house_num, 2] = matrix[house_num, 0] + (1 - r) * cur_house_width + r * cur_house_height
         matrix[house_num, 3] = matrix[house_num, 1] - (1 - r) * cur_house_height - r * cur_house_width
-        print(matrix[house_num, 2] - matrix[house_num, 0])
+    
         return matrix
