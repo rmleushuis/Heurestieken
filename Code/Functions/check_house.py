@@ -65,7 +65,6 @@ def check_house(x1, y1, x2, y2, index, house_mat, free_space):
     # check if the location of the tested house violates minimum distance rules
     if all( all_cond.sum(0) >= 1 ):
         positions = np.array([x1, y1, x2, y2])
-        print(index)
         
         distance_ind = np.argmax(all_cond, axis = 0)
         distances = np.array([0.0] * len(distance_ind))

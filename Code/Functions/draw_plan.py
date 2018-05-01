@@ -14,17 +14,31 @@ from global_vars import GRID
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-def draw_plan(houses, save):
-
-    # create an empty figure
-    fig1, (axis) = plt.subplots(1, 1)
-    # set axis to grid width and height
-    plt.axis([0, GRID['width'] , 0, GRID['height']])
+class Show_grid():
     
-    # draw each house a rectangle in the plot
-    for i in range(houses.version): 
-        axis.add_patch(patches.Rectangle((houses.matrix[i, 0], houses.matrix[i, 3]),
-                                         houses.matrix[i, 6], houses.matrix[i, 5], ))
-    # save if input argument save is 1
-    if save == 1:
-        fig1.savefig('plan.png', dpi=90, bbox_inches='tight')
+    def __init__(self):
+        
+        self.ax = None
+        self.fig = None
+        
+        self.create_grid()
+    
+    def create_grid(self):
+        
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+        self.ax.set_xbound(0, GRID['width'])
+        self.ax.set_ybound(0, GRID['height'])
+        plt.gca().set_aspect('equal', adjustable='box')
+        
+    def draw_house(self, new_house, index):
+        
+        measures = {'lowerleft': (new_house[0], new_house[3]),
+                    'width': new_house[2] - new_house[0],
+                    'height': new_house[1] - new_house[3]}
+        
+        self.ax.add_patch(patches.Rectangle(measures['lowerleft'],
+                                                 measures['width'], 
+                                                 measures['height']))
+        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(index))
+           
