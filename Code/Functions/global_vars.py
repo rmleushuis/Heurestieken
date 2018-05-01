@@ -9,9 +9,15 @@ PERC_VIL = 0.15
 
 # define the grid and the different houses
 GRID = {'width': 160, 'height': 180}
+<<<<<<< HEAD
 HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2},
                '2': {'height': 10,'width': 7.5,'free': 3},
                '3': {'height': 11,'width': 10.5,'free': 6}}
+=======
+HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2, 'price': 285000, 'inc': 3},
+               '2': {'height': 10,'width': 7.5,'free': 3, 'price': 399000, 'inc': 4},
+               '3': {'height': 11,'width': 10.5,'free': 6, 'price': 610000, 'inc': 6}}
+>>>>>>> a22226728e76800b257e2e88e31ec426c5b058e3
 
 # define which column of the matrix the minimum distance function should grab
 # for house i
