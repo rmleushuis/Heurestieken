@@ -39,10 +39,9 @@ class House(object):
                                        np.repeat(2, np.round(PERC_BUNG * total_houses)),
                                        np.repeat(3, np.round(PERC_VIL * total_houses))))
         
-        height_func = np.vectorize(lambda x: HOUSE_CHARS[str(int(x))]['height'])
-        width_func = np.vectorize(lambda x: HOUSE_CHARS[str(int(x))]['width'])
-        free_func = np.vectorize(lambda x: HOUSE_CHARS[str(int(x))]['free'])
-
+        height_func = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['height']))
+        width_func = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['width']))
+        free_func = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['free']))
         matrix[:, 7] =  height_func(matrix[:, 4])
         matrix[:, 8] =  width_func(matrix[:, 4])
         matrix[:, 9] =  free_func(matrix[:, 4])

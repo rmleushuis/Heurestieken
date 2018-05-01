@@ -31,13 +31,14 @@ class Start_sol():
         total_houses = self.total_houses
         house_matrix = self.house.get_house_matrix()
         for i in range(total_houses):
+            print(i)
             while True:
                 self.generate_house(house_matrix, i)
                 if i != 0:
                     valid, distance = check_house(house_matrix[i, 0], house_matrix[i, 1], 
                                                   house_matrix[i, 2], house_matrix[i, 3], i, 
                                                   house_matrix, house_matrix[i, 9])
-                    #print(i,valid)
+                    
                     if valid == 0:
                         self.distance_mat[i, :i] = distance
                         show_grid.draw_house(house_matrix[i, :], i)
@@ -52,7 +53,7 @@ class Start_sol():
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]
         
         # store the minimum distance in the last column of the matrix in the class
-        house_matrix[:, 8] = np.min(self.distance_mat, axis = 0)
+        house_matrix[:, 6] = np.min(self.distance_mat, axis = 0)
         
         self.house.set_house_matrix(house_matrix)
         

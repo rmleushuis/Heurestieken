@@ -13,7 +13,7 @@ from start_sol import Start_sol
 
 # define the 3 versions of the problem
 total_houses = [20, 40, 60]
-total_houses = 40
+total_houses = 60
 
 house = House(total_houses)
 # create the class for houses
