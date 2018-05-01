@@ -5,9 +5,16 @@ from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL
 import numpy as np
 
 # this is a class for the houses
-class house(object):
+class House(object):
     def __init__(self, version):
+        self.version = version
+        self.matrix = self.conc(version)
+        self.rows = version
+        self.value = -10000000
+        self.columns = self.matrix.shape[1]
+            
         
+    def conc(self, version):
         # initialize a empty matrix with all the future data
         matrix = np.zeros(shape = (version, 9))
         
@@ -15,8 +22,8 @@ class house(object):
         matrix[:, 4] = np.concatenate((np.repeat(1, PERC_SOLO * version), 
                                        np.repeat(2, PERC_BUNG * version),
                                        np.repeat(3, PERC_VIL * version)))
-        
-        self.version = version
-        self.matrix = matrix
-        self.rows = version
-        self.columns = matrix.shape[1]
+        return matrix
+    
+    
+    def update_value(self, new_value):
+        self.value = new_value
