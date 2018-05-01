@@ -5,23 +5,8 @@ from global_vars import GRID, HOUSE_CHARS
 import numpy as np
 
 # this is a class for the houses
-<<<<<<< HEAD
-class house(object):
-    def __init__(self, version):
-=======
 class House(object):
-<<<<<<< HEAD
     def __init__(self, total_houses):
-=======
-    def __init__(self, version):
-        self.version = version
-        self.matrix = self.conc(version)
-        self.rows = version
-        self.value = -10000000
-        self.columns = self.matrix.shape[1]
-            
->>>>>>> a22226728e76800b257e2e88e31ec426c5b058e3
->>>>>>> 2957726b5e6eae439ce692ca5089787fc20e7f5e
         
         # initialize a empty matrix with all the future data
         self.value = None
@@ -50,7 +35,6 @@ class House(object):
         matrix = np.zeros(shape = (total_houses, 10))
 
         # for column 4 insert the array with number of house types
-<<<<<<< HEAD
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * total_houses)), 
                                        np.repeat(2, np.round(PERC_BUNG * total_houses)),
                                        np.repeat(3, np.round(PERC_VIL * total_houses))))
@@ -76,21 +60,3 @@ class House(object):
     
     def update_value(self, new_value):
         self.value = new_value
-=======
-        matrix[:, 4] = np.concatenate((np.repeat(1, PERC_SOLO * version), 
-                                       np.repeat(2, PERC_BUNG * version),
-                                       np.repeat(3, PERC_VIL * version)))
-<<<<<<< HEAD
-        
-        self.version = version
-        self.matrix = matrix
-        self.rows = version
-        self.columns = matrix.shape[1]
-=======
-        return matrix
-    
-    
-    def update_value(self, new_value):
-        self.value = new_value
->>>>>>> a22226728e76800b257e2e88e31ec426c5b058e3
->>>>>>> 2957726b5e6eae439ce692ca5089787fc20e7f5e
