@@ -18,6 +18,7 @@ def check_house(x1, y1, x2, y2, index, house_mat, free_space):
     
     # create a temporary matrix to work with
     filled_houses_mat = house_mat[:index, :]
+    free_space_cur = free_space
     
     house_free_space = filled_houses_mat[:, 9]
 
@@ -75,10 +76,10 @@ def check_house(x1, y1, x2, y2, index, house_mat, free_space):
             m = positions[DIST2[str(plane)]] - filled_houses_mat[i, DIST[str(plane)]]
             # if even
             if plane % 2 == 0:
-                distances[i] = np.abs(m)
+                distances[i] = np.abs(m) - free_space_cur
             # if odd
             else:
-                distances[i] = np.sqrt( np.dot(m, m) )
+                distances[i] = np.sqrt( np.dot(m, m) ) - free_space_cur
         
         # house violates requirements
         return 0, distances

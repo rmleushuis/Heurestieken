@@ -12,7 +12,6 @@ from global_vars import GRID, HOUSE_CHARS
 
 # import functions from other documents
 from check_house import check_house
-from house_class import House
 from draw_plan import Show_grid
 
 # import necessary modules
@@ -22,42 +21,52 @@ show_grid = Show_grid()
 
 class Start_sol():
     
-    def __init__(self, house):
-        self.house = house
-        self.total_houses = house.get_total_houses()
+    def __init__(self, matrix):
+        self.house_matrix = matrix
+        self.total_houses = len(matrix)
         self.distance_mat = np.ones(shape = (self.total_houses, self.total_houses )) * 1000
         
     def fill_house_matrix(self):
         total_houses = self.total_houses
-        house_matrix = self.house.get_house_matrix()
-        for i in range(total_houses):
+        house_matrix = self.house_matrix
+        max_repeats = 40000
+        i = 0
+        while i < total_houses:
+            counter = 0
             print(i)
             while True:
                 self.generate_house(house_matrix, i)
                 if i != 0:
+                    
                     valid, distance = check_house(house_matrix[i, 0], house_matrix[i, 1], 
                                                   house_matrix[i, 2], house_matrix[i, 3], i, 
                                                   house_matrix, house_matrix[i, 9])
                     
                     if valid == 0:
                         self.distance_mat[i, :i] = distance
-                        show_grid.draw_house(house_matrix[i, :], i)
                         break
                     else:
+                        counter += 1
+                        if max_repeats == counter:
+                            i -= 10
+                            break
                         continue
                     
                 show_grid.draw_house(house_matrix[i, :], i)
                 break
-    
+            
+            i += 1
+            
+        for k in range(total_houses):
+            show_grid.draw_house(house_matrix[k, :], k)
+            
         i_upper = np.triu_indices(total_houses, 1)
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]
         
         # store the minimum distance in the last column of the matrix in the class
         house_matrix[:, 6] = np.min(self.distance_mat, axis = 0)
         
-        self.house.set_house_matrix(house_matrix)
-        
-        return self.house
+        return self.house_matrix
         # generate a starting solution 
         
     
