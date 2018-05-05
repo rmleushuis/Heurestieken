@@ -15,7 +15,7 @@ from stoch_hill_climb import stoch_steepest_hill
 
 # define the 3 versions of the problem
 total_houses = [20, 40, 60]
-total_houses = 20
+total_houses = 40
 
 # create the class for houses and generate random solution
 house = House(total_houses)

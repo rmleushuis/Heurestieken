@@ -36,16 +36,16 @@ def stoch_steepest_hill(houses):
         matrix_improv = gen_improv(matrix_copy, house)
         
         
-        r = matrix_improv[house, 5]
-        left = matrix_improv[house, 9]
-        right = GRID["width"] - matrix_improv[house, 9] - r *matrix_improv[house, 8] - (1-r)*matrix_improv[house, 7]
-        top = GRID["height"] - matrix_improv[house, 9]
-        bot = matrix_improv[house, 9] + (1-r) *matrix_improv[house, 8] + r*matrix_improv[house, 7]
+       # r = matrix_improv[house, 5]
+        #left = matrix_improv[house, 9]
+        #right = GRID["width"] - matrix_improv[house, 9] - r *matrix_improv[house, 8] - (1-r)*matrix_improv[house, 7]
+        #top = GRID["height"] - matrix_improv[house, 9]
+        #bot = matrix_improv[house, 9] + (1-r) *matrix_improv[house, 8] + r*matrix_improv[house, 7]
         
-        while matrix_improv[house, 0] < left or matrix_improv[house, 0] > right or\
-            matrix_improv[house, 1] < bot or matrix_improv[house, 1]> top:
+       # while matrix_improv[house, 0] < left or matrix_improv[house, 0] > right or\
+        #    matrix_improv[house, 1] < bot or matrix_improv[house, 1]> top:
                 
-            matrix_improv = gen_improv(matrix_copy, house)
+         #   matrix_improv = gen_improv(matrix_copy, house)
         
                                
         # check and calculate distance

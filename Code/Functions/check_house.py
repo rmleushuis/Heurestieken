@@ -21,7 +21,7 @@ def check_house(house, house_mat):
     y1 = house_mat[house, 1]
     x2 = house_mat[house, 2]
     y2 = house_mat[house, 3]
-    free_space = house_mat[house, 5]
+    free_space = house_mat[house, 9]
        
     # create a temporary matrix to work with
     filled_houses_mat = house_mat[:house, :]
