@@ -14,10 +14,17 @@ from global_vars import DIST, DIST2
 # import necessary modules
 import numpy as np
 
-def check_house(x1, y1, x2, y2, index, house_mat, free_space):
+def check_house(house, house_mat):
     
+    # retrieve variables of the evaluated house
+    x1 = house_mat[house, 0]
+    y1 = house_mat[house, 1]
+    x2 = house_mat[house, 2]
+    y2 = house_mat[house, 3]
+    free_space = house_mat[house, 5]
+       
     # create a temporary matrix to work with
-    filled_houses_mat = house_mat[:index, :]
+    filled_houses_mat = house_mat[:house, :]
     free_space_cur = free_space
     
     house_free_space = filled_houses_mat[:, 9]
@@ -65,8 +72,7 @@ def check_house(x1, y1, x2, y2, index, house_mat, free_space):
     
     # check if the location of the tested house violates minimum distance rules
     if all( all_cond.sum(0) >= 1 ):
-        positions = np.array([x1, y1, x2, y2])
-        
+        positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
         distances = np.array([0.0] * len(distance_ind))
         
@@ -81,8 +87,8 @@ def check_house(x1, y1, x2, y2, index, house_mat, free_space):
             else:
                 distances[i] = np.sqrt( np.dot(m, m) ) - free_space_cur
         
-        # house violates requirements
+        # house does not violate requirement
         return 0, distances
     else:
-        # house does not violate requirement
+        # house violates requirements
         return 1, None

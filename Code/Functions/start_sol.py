@@ -33,14 +33,11 @@ class Start_sol():
         i = 0
         while i < total_houses:
             counter = 0
-            print(i)
             while True:
                 self.generate_house(house_matrix, i)
                 if i != 0:
                     
-                    valid, distance = check_house(house_matrix[i, 0], house_matrix[i, 1], 
-                                                  house_matrix[i, 2], house_matrix[i, 3], i, 
-                                                  house_matrix, house_matrix[i, 9])
+                    valid, distance = check_house(i, house_matrix)
                     
                     if valid == 0:
                         self.distance_mat[i, :i] = distance
@@ -79,6 +76,7 @@ class Start_sol():
         
         # rotate house 90 degrees
         r = np.random.choice([0,1])
+        #matrix[house_num, 6] =r
         
         matrix[house_num, 0] = np.random.uniform(low = 0 + cur_house_free,
                                high = GRID['width'] - (1-r) * cur_house_width - r * cur_house_height -

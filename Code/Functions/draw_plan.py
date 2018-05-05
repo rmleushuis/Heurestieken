@@ -40,5 +40,4 @@ class Show_grid():
         self.ax.add_patch(patches.Rectangle(measures['lowerleft'],
                                                  measures['width'], 
                                                  measures['height']))
-        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(index))
-           
+        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(" "))
