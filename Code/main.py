@@ -10,7 +10,7 @@ from house_class import House
 from draw_plan import Show_grid
 from stoch_hill_climb import stoch_steepest_hill
 
-show_grid = Show_grid()
+#show_grid = Show_grid()
 # import functions from other documents
 
 # define the 3 versions of the problem

@@ -34,6 +34,19 @@ def stoch_steepest_hill(houses):
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix()
         matrix_improv = gen_improv(matrix_copy, house)
+        
+        
+        r = matrix_improv[house, 5]
+        left = matrix_improv[house, 9]
+        right = GRID["width"] - matrix_improv[house, 9] - r *matrix_improv[house, 8] - (1-r)*matrix_improv[house, 7]
+        top = GRID["height"] - matrix_improv[house, 9]
+        bot = matrix_improv[house, 9] + (1-r) *matrix_improv[house, 8] + r*matrix_improv[house, 7]
+        
+        while matrix_improv[house, 0] < left or matrix_improv[house, 0] > right or\
+            matrix_improv[house, 1] < bot or matrix_improv[house, 1]> top:
+                
+            matrix_improv = gen_improv(matrix_copy, house)
+        
                                
         # check and calculate distance
         valid, distance = check_house(house, matrix_improv)
@@ -55,8 +68,9 @@ def stoch_steepest_hill(houses):
                 
 def gen_improv(matrix, house):
     # generate new values for possible improvement step
-    matrix[house, 0] = matrix[house, 0] + np.random.uniform(low = -0.01 , high = 0.01)
-    matrix[house, 1] = matrix[house, 1] + np.random.uniform(low = -0.01 , high = 0.01)
+    
+    matrix[house, 0] = matrix[house, 0] + np.random.uniform(low = -0.001 , high = 0.001)
+    matrix[house, 1] = matrix[house, 1] + np.random.uniform(low = -0.001 , high = 0.001)
     matrix[house, 5] = random.randint(0, 2)
     matrix[house, 2] =  matrix[house, 0] + (1 - matrix[house, 9]) * matrix[house, 6] +  \
                              matrix[house, 9] * matrix[house, 5] 
