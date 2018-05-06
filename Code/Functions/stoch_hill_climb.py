@@ -25,6 +25,8 @@ def stoch_steepest_hill(houses):
     valid = 1
     improvement = -1
     new  = 'nan'
+    max_repeats = 4000
+    counter = 0
     
     while valid == 1 or improvement <= 0 or str(new)=='nan':
         # calculate  old value and store old matrix
@@ -60,9 +62,13 @@ def stoch_steepest_hill(houses):
             improvement = new - old
         
         if valid == 1 or improvement < 0:
+            counter += 1
             houses.set_house_matrix(matrix_old)
-        
-        house = random.randint(0, houses.total_houses - 1)
+            if max_repeats == counter:
+                house = random.randint(0, houses.total_houses - 1)
+                break
+            continue
+
     return matrix_improv
 
                 
