@@ -38,6 +38,7 @@ def stoch_steepest_hill(houses):
         matrix_improv = gen_improv(matrix_copy, house)
         
         
+        
        # r = matrix_improv[house, 5]
         #left = matrix_improv[house, 9]
         #right = GRID["width"] - matrix_improv[house, 9] - r *matrix_improv[house, 8] - (1-r)*matrix_improv[house, 7]
@@ -74,12 +75,12 @@ def stoch_steepest_hill(houses):
                 
 def gen_improv(matrix, house):
     # generate new values for possible improvement step
+    improv_x = np.random.uniform(low = -0.001 , high = 0.001)
+    improv_y = np.random.uniform(low = -0.001 , high = 0.001)
     
-    matrix[house, 0] = matrix[house, 0] + np.random.uniform(low = -0.001 , high = 0.001)
-    matrix[house, 1] = matrix[house, 1] + np.random.uniform(low = -0.001 , high = 0.001)
+    matrix[house, 0] += improv_x
+    matrix[house, 1] += improv_y
     matrix[house, 5] = random.randint(0, 2)
-    matrix[house, 2] =  matrix[house, 0] + (1 - matrix[house, 9]) * matrix[house, 6] +  \
-                             matrix[house, 9] * matrix[house, 5] 
-    matrix[house, 3] = matrix[house, 1] - (1 - matrix[house, 9]) * matrix[house, 5] - \
-                             matrix[house, 9] * matrix[house, 6]
+    matrix[house, 2] += improv_x
+    matrix[house, 3] += improv_y
     return matrix

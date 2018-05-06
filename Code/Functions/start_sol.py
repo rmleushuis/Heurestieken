@@ -17,7 +17,7 @@ from draw_plan import Show_grid
 # import necessary modules
 import numpy as np
 
-#show_grid = Show_grid()
+show_grid = Show_grid()
 
 class Start_sol():
     
@@ -49,13 +49,13 @@ class Start_sol():
                             break
                         continue
                     
-                #show_grid.draw_house(house_matrix[i, :], i)
+                show_grid.draw_house(house_matrix[i, :], i)
                 break
             
             i += 1
             
-        #for k in range(total_houses):
-            #show_grid.draw_house(house_matrix[k, :], k)
+        for k in range(total_houses):
+            show_grid.draw_house(house_matrix[k, :], k)
             
         i_upper = np.triu_indices(total_houses, 1)
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]

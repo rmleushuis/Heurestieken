@@ -56,7 +56,7 @@ class House(object):
     def get_house_matrix(self):
         return self.matrix
     
-    # change house matrix
+#     change house matrix
     def set_house_matrix(self, matrix):
         
         # by changing houses the distances in column 6 also need to be recalculated
