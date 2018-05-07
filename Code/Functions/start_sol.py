@@ -36,8 +36,8 @@ class Start_sol():
             while True:
                 self.generate_house(house_matrix, i)
                 valid, distance = check_house(i, house_matrix)
-                grid_distances = distance[-4:]
                 if valid == 0:
+                    grid_distances = distance[-4:]
                     self.distance_mat[i, -4:] = grid_distances
                     if i != 0:
                         distance = distance[:i]
