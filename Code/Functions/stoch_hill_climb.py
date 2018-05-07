@@ -21,49 +21,52 @@ def stoch_steepest_hill(houses):
     
     # choose a random house to move
     house = random.randint(0, houses.total_houses - 1)
+    
     # set up for while loop
-    valid = 1
     improvement = -1
-    new  = 'nan'
+    new_value  = 'nan'
     max_repeats = 4000
     counter = 0
     
-    while valid == 1 or improvement <= 0 or str(new)=='nan':
-        # calculate  old value and store old matrix
-        old = houses.compute_value()
-        matrix_old = houses.get_house_matrix()
+    # calculate  old value and store old matrix
+    old = houses.compute_value().copy()
+    matrix_old = houses.get_house_matrix().copy()
+    
+    while improvement <= 0:
         
         # generate copy of the matrix to try improvements on
-        matrix_copy = houses.get_house_matrix()
+        matrix_copy = houses.get_house_matrix().copy()
         matrix_improv = gen_improv(matrix_copy, house)
         
-                               
-        # check and calculate distance
+        # calculate distance
         valid, distance = check_house(house, matrix_improv)
         
+        # if new position is valid
         if valid == 0 :
             # calculate new value
             houses.set_house_matrix(matrix_improv)
-            new = houses.compute_value()
+            new_value = houses.compute_value()
             
             # calculate improvement
-            improvement = new - old
+            improvement = new_value - old
         
+        # if new position is not valid or the improvement is negative
         if valid == 1 or improvement < 0:
             counter += 1
             houses.set_house_matrix(matrix_old)
+            
+            # continue until max_repeats is reached
             if max_repeats == counter:
-                house = random.randint(0, houses.total_houses - 1)
+                matrix_improv = matrix_old
                 break
-            continue
 
     return matrix_improv
 
                 
 def gen_improv(matrix, house):
     # generate new values for possible improvement step
-    improv_x = np.random.uniform(low = -3 , high = 3)
-    improv_y = np.random.uniform(low = -3 , high = 3)
+    improv_x = np.random.uniform(low = -0.001 , high = 0.001)
+    improv_y = np.random.uniform(low = -0.001 , high = 0.001)
     
     matrix[house, 0] += improv_x
     matrix[house, 1] += improv_y

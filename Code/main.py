@@ -25,7 +25,7 @@ mat = house.get_house_matrix()
 value = house.compute_value()
 print('value:', value)
 
-for i in range(1000):
+for i in range(100):
     mat = stoch_steepest_hill(house)
     price = house.compute_value()
     print(price)
