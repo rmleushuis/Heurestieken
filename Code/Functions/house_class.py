@@ -60,13 +60,17 @@ class House(object):
     def set_house_matrix(self, matrix):
         
         # by changing houses the distances in column 6 also need to be recalculated
-        distance_mat = np.ones(shape = (self.total_houses, self.total_houses)) * 1000
+        distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         for i in range(self.total_houses):
             valid, distance  = check_house(i, matrix)
-            distance_mat[i, :i] = distance        
+            grid_distances = distance[-4:]
+            distance = distance[:-4]
+            distance_mat[i, :i] = distance 
+            distance_mat[i, -4:] = grid_distances
         i_upper = np.triu_indices(self.total_houses, 1)
         distance_mat[i_upper] = distance_mat.transpose()[i_upper]
-        matrix[:, 6] = np.min(distance_mat, axis = 0)
+        distance_mat[-4:,:] = distance_mat[:,-4:].transpose()
+        matrix[:, 6] = np.min(distance_mat, axis = 0)[:-4]
         
         # change the matrix with the new distances
         self.matrix = matrix
