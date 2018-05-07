@@ -69,7 +69,7 @@ def check_house(house, house_mat):
     
     tenth_condition = x2 <= (GRID['width'] - free_space_cur)
     
-    eleventh_condition = y1 <= (GRID['width'] - free_space_cur)
+    eleventh_condition = y1 <= (GRID['height'] - free_space_cur)
     
     twelfth_condition = y2 >= free_space_cur
     
@@ -102,7 +102,7 @@ def check_house(house, house_mat):
                 distances[i] = np.sqrt( np.dot(m, m) ) - free_space_cur
         
         distances[-1] = y2 -  free_space_cur
-        distances[-2] = (GRID['width'] - free_space_cur) - y1
+        distances[-2] = (GRID['height'] - free_space_cur) - y1
         distances[-3] = (GRID['width'] - free_space_cur) - x2
         distances[-4] = x1 - free_space_cur
             
