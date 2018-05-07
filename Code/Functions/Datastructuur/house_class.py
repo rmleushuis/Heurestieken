@@ -1,3 +1,14 @@
+# import necessary modules
+import os, sys
+
+# add current structure to path
+directory = os.path.dirname(os.path.realpath("__file__"))
+sys.path.append(os.path.join(directory, "functions"))
+sys.path.append(os.path.join(directory, "functions/algoritmes"))
+sys.path.append(os.path.join(directory, "functions/controle"))
+sys.path.append(os.path.join(directory, "functions/datastructuur"))
+sys.path.append(os.path.join(directory, "functions/visualisatie"))
+
 # import global vars
 from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL
 from global_vars import HOUSE_CHARS
@@ -61,16 +72,20 @@ class House(object):
         
         # by changing houses the distances in column 6 also need to be recalculated
         distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
-        for i in range(self.total_houses):
-            valid, distance  = check_house(i, matrix)
-            grid_distances = distance[-4:]
-            distance = distance[:-4]
-            distance_mat[i, :i] = distance 
-            distance_mat[i, -4:] = grid_distances
-        i_upper = np.triu_indices(self.total_houses, 1)
-        distance_mat[i_upper] = distance_mat.transpose()[i_upper]
-        distance_mat[-4:,:] = distance_mat[:,-4:].transpose()
-        matrix[:, 6] = np.min(distance_mat, axis = 0)[:-4]
+        try:
+            for i in range(self.total_houses):
+                valid, distance  = check_house(i, matrix)
+                grid_distances = distance[-4:]
+                distance = distance[:-4]
+                distance_mat[i, :i] = distance 
+                distance_mat[i, -4:] = grid_distances
+            i_upper = np.triu_indices(self.total_houses, 1)
+            distance_mat[i_upper] = distance_mat.transpose()[i_upper]
+            distance_mat[-4:,:] = distance_mat[:,-4:].transpose()
+            matrix[:, 6] = np.min(distance_mat, axis = 0)[:-4]
+        except:
+            for i in range(len(matrix[:,6])):
+                matrix[i, 6]=-1
         
         # change the matrix with the new distances
         self.matrix = matrix

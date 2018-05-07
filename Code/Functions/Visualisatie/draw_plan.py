@@ -6,6 +6,16 @@ Input:  matrix with house locations, integer (0, 1) to save the plan or not,
         number of houses
 Output: plan of the houses
 """
+# import necessary modules
+import os, sys
+
+# add current structure to path
+directory = os.path.dirname(os.path.realpath("__file__"))
+sys.path.append(os.path.join(directory, "functions"))
+sys.path.append(os.path.join(directory, "functions/algoritmes"))
+sys.path.append(os.path.join(directory, "functions/controle"))
+sys.path.append(os.path.join(directory, "functions/datastructuur"))
+sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import global variables
 from global_vars import GRID
