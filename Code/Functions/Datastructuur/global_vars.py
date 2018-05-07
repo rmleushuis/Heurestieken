@@ -1,7 +1,6 @@
 """
 This file has all global variables which are used in other python documents.
 """
-
 # distribution of houses on the grid
 PERC_SOLO = 0.6
 PERC_BUNG = 0.25
