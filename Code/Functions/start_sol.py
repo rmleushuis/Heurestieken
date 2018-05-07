@@ -62,8 +62,6 @@ class Start_sol():
         i_upper = np.triu_indices(total_houses, 1)
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]
         self.distance_mat[-4:,:] = self.distance_mat[:,-4:].transpose()
-        print(self.distance_mat)
-        print(np.min(self.distance_mat, axis = 0))
         # store the minimum distance in the last column of the matrix in the class
         house_matrix[:, 6] = np.min(self.distance_mat, axis = 0)[:-4]
         
