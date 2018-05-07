@@ -9,6 +9,7 @@ sys.path.append(os.path.join(directory, "functions"))
 from house_class import House
 from draw_plan import Show_grid
 from stoch_hill_climb import stoch_steepest_hill
+from simulated_annealing import sim_ann
 
 #show_grid = Show_grid()
 # import functions from other documents
@@ -25,12 +26,30 @@ mat = house.get_house_matrix()
 value = house.compute_value()
 print('value:', value)
 
-for i in range(100):
+# stochastic hill climbing algorithm
+for i in range(10):
     mat = stoch_steepest_hill(house)
     price = house.compute_value()
     print(price)
 house.set_house_matrix(mat)
 
+show_grid = Show_grid()
+mat = house.get_house_matrix()
+for k in range(total_houses):
+     show_grid.draw_house(mat[k, :], k)
+     
+# simulated annealing algorithm
+total_it = 200
+start_temp = 1000
+end_temp = 10
+# temp struct meegeven moet nog (zie simulated_annealing.py)
+acceptance_limit = 0.1
+
+for i in range(total_it):
+    mat = sim_ann(house, i, total_it, start_temp, end_temp, acceptance_limit)
+    price = house.compute_value()
+    print(price)
+house.set_house_matrix(mat)
 
 show_grid = Show_grid()
 mat = house.get_house_matrix()
