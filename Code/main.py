@@ -15,7 +15,7 @@ from stoch_hill_climb import stoch_steepest_hill
 
 # define the 3 versions of the problem
 total_houses = [20, 40, 60]
-total_houses = 20
+total_houses = 2
 
 # create the class for houses and generate random solution
 house = House(total_houses)
@@ -24,15 +24,15 @@ house = House(total_houses)
 mat = house.get_house_matrix()
 value = house.compute_value()
 print('value:', value)
-
-for i in range(20):
-    mat = stoch_steepest_hill(house)
-    price = house.compute_value()
-    print(price)
-house.set_house_matrix(mat)
-
-
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(total_houses):
-     show_grid.draw_house(mat[k, :], k)
+#
+#for i in range(20):
+#    mat = stoch_steepest_hill(house)
+#    price = house.compute_value()
+#    print(price)
+#house.set_house_matrix(mat)
+#
+#
+#show_grid = Show_grid()
+#mat = house.get_house_matrix()
+#for k in range(total_houses):
+#     show_grid.draw_house(mat[k, :], k)

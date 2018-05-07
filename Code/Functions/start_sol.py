@@ -24,7 +24,7 @@ class Start_sol():
     def __init__(self, matrix):
         self.house_matrix = matrix
         self.total_houses = len(matrix)
-        self.distance_mat = np.ones(shape = (self.total_houses, self.total_houses )) * 1000
+        self.distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         
     def fill_house_matrix(self):
         total_houses = self.total_houses
@@ -35,19 +35,21 @@ class Start_sol():
             counter = 0
             while True:
                 self.generate_house(house_matrix, i)
-                if i != 0:
-                    
-                    valid, distance = check_house(i, house_matrix)
-                    
-                    if valid == 0:
+                valid, distance = check_house(i, house_matrix)
+                grid_distances = distance[-4:]
+                if valid == 0:
+                    self.distance_mat[i, -4:] = grid_distances
+                    if i != 0:
+                        distance = distance[:i]
+
                         self.distance_mat[i, :i] = distance
                         break
-                    else:
-                        counter += 1
-                        if max_repeats == counter:
-                            i -= 10
-                            break
-                        continue
+                else:
+                    counter += 1
+                    if max_repeats == counter:
+                        i -= 10
+                        break
+                    continue
                     
                 show_grid.draw_house(house_matrix[i, :], i)
                 break
@@ -56,12 +58,14 @@ class Start_sol():
             
         for k in range(total_houses):
             show_grid.draw_house(house_matrix[k, :], k)
-            
+        
         i_upper = np.triu_indices(total_houses, 1)
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]
-        
+        self.distance_mat[-4:,:] = self.distance_mat[:,-4:].transpose()
+        print(self.distance_mat)
+        print(np.min(self.distance_mat, axis = 0))
         # store the minimum distance in the last column of the matrix in the class
-        house_matrix[:, 6] = np.min(self.distance_mat, axis = 0)
+        house_matrix[:, 6] = np.min(self.distance_mat, axis = 0)[:-4]
         
         return self.house_matrix
         # generate a starting solution 

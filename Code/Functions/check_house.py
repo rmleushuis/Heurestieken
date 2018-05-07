@@ -9,7 +9,7 @@ Output: 0 if the house violates the minimum distance required
 """
 
 # import global_vars
-from global_vars import DIST, DIST2
+from global_vars import DIST, DIST2, GRID
 
 # import necessary modules
 import numpy as np
@@ -35,6 +35,7 @@ def check_house(house, house_mat):
     bottom_side = filled_houses_mat[:, 3]
     
     free_space = np.ones((len(house_free_space), 2)) * free_space
+
     free_space[:, 0] = house_free_space
     
     free_space = np.max(free_space, 1)
@@ -64,17 +65,30 @@ def check_house(house, house_mat):
     eigth_condition = np.logical_and( y2 >= (top_side + free_space),
                                       x1 >= (right_side + free_space) )
     
+    ninth_condition = x1 >= free_space_cur
+    
+    tenth_condition = x2 <= (GRID['width'] - free_space_cur)
+    
+    eleventh_condition = y1 <= (GRID['width'] - free_space_cur)
+    
+    twelfth_condition = y2 >= free_space_cur
+    
     
     # put all conditions into an numpy array to test them all at once
     all_cond = np.array([first_condition, second_condition, third_condition,
                          fourth_condition, fifth_condition, sixth_condition,
                          seventh_condition, eigth_condition])    
     
+    grid_cond = np.array([ninth_condition, tenth_condition, eleventh_condition,
+                          twelfth_condition])
+
+    
+    
     # check if the location of the tested house violates minimum distance rules
-    if all( all_cond.sum(0) >= 1 ):
+    if all( all_cond.sum(0) >= 1 ) and all( grid_cond == 1):
         positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
-        distances = np.array([0.0] * len(distance_ind))
+        distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )
         
         # calculate the minimum distance of the house to other houses
         for i in range(len(distance_ind)):
@@ -87,6 +101,11 @@ def check_house(house, house_mat):
             else:
                 distances[i] = np.sqrt( np.dot(m, m) ) - free_space_cur
         
+        distances[-1] = y2 -  free_space_cur
+        distances[-2] = (GRID['width'] - free_space_cur) - y1
+        distances[-3] = (GRID['width'] - free_space_cur) - x2
+        distances[-4] = x1 - free_space_cur
+            
         # house does not violate requirement
         return 0, distances
     else:
