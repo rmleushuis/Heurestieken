@@ -18,7 +18,7 @@ sys.path.append(os.path.join(directory, "functions/datastructuur"))
 sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import variables
-from global_vars import GRID, HOUSE_CHARS
+from global_vars import GRID
 
 # import functions from other documents
 from check_house import check_house
