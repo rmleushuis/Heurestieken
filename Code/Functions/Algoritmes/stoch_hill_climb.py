@@ -37,7 +37,7 @@ def stoch_steepest_hill(houses, magni):
     old = houses.compute_value().copy()
     matrix_old = houses.get_house_matrix().copy()
     
-    while improvement <= 0:
+    while improvement < 0:
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()

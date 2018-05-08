@@ -28,20 +28,20 @@ random = []
 stoch = []
 ann = []
 
-for i in range(1000):
-    # create the class for houses and generate random solution
-    house = House(total_houses)
-    
-    # link the starting solution
-    mat = house.get_house_matrix()
-    # store a copy of the starting solution
-    mat_copy = house.get_house_matrix().copy()
-    value = house.compute_value()
-    print("random", value)
-    random.append(value)
+
+# create the class for houses and generate random solution
+house = House(total_houses)
+
+# link the starting solution
+mat = house.get_house_matrix()
+# store a copy of the starting solution
+mat_copy = house.get_house_matrix().copy()
+value = house.compute_value()
+print("random", value)
+random.append(value)
 
 # number of iterations the algorithm has to perform
-total_it = 100
+total_it = 50
 # magnitude of maximal step in generate improvement
 magni = 10
 
