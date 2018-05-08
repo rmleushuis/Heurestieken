@@ -19,9 +19,6 @@ sys.path.append(os.path.join(directory, "functions/visualisatie"))
 import numpy as np
 import random
 
-# import global variables
-from global_vars import GRID
-
 # import functions from other documents
 from check_house import check_house
 
