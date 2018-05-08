@@ -19,14 +19,14 @@ sys.path.append(os.path.join(directory, "functions/datastructuur"))
 sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import necessary modules
-import numpy as np
 import random
 import math
 
 # import functions from other documents
 from check_house import check_house
+from gen_improvement import gen_improv
 
-def sim_ann(houses, n, N, T0, TN, min_chance):
+def sim_ann(houses, n, N, T0, TN, min_chance, magni):
     
     # choose a random house to move
     house = random.randint(0, houses.total_houses - 1)
@@ -51,7 +51,7 @@ def sim_ann(houses, n, N, T0, TN, min_chance):
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house)
+        matrix_improv = gen_improv(matrix_copy, house, magni)
         
         # calculate distance
         valid, distance = check_house(house, matrix_improv)
@@ -83,16 +83,3 @@ def sim_ann(houses, n, N, T0, TN, min_chance):
                 break
 
     return matrix_improv
-
-                
-def gen_improv(matrix, house):
-    # generate new values for possible improvement step
-    improv_x = np.random.uniform(low = -10 , high = 10)
-    improv_y = np.random.uniform(low = -10 , high = 10)
-    
-    matrix[house, 0] += improv_x
-    matrix[house, 1] += improv_y
-    matrix[house, 5] = random.randint(0, 2)
-    matrix[house, 2] += improv_x
-    matrix[house, 3] += improv_y
-    return matrix
