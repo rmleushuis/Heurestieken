@@ -28,7 +28,6 @@ random = []
 stoch = []
 ann = []
 
-
 # create the class for houses and generate random solution
 house = House(total_houses)
 house.create_water()
@@ -41,46 +40,63 @@ value = house.compute_value()
 print("random", value)
 random.append(value)
 
-## number of iterations the algorithm has to perform
-#total_it = 50
-## magnitude of maximal step in generate improvement
-#magni = 10
-#
-## stochastic hill climbing algorithm
-#for iteration in range(total_it):
-#    mat = stoch_steepest_hill(house, magni)
-#    price = house.compute_value()
-#house.set_house_matrix(mat)
-#
-#stoch.append(price)
-## print solution
-#print("stoch hill", price)
-#
-## draw the stochastic hill climbing solution
+# link the starting solution
+mat = house.get_house_matrix()
+# store a copy of the starting solution
+mat_copy = house.get_house_matrix().copy()
+value = house.compute_value()
+print("random", value)
+random.append(value)
+
+# number of iterations the algorithm has to perform
+total_it = 100
+# magnitude of maximal step in generate improvement
+magni = 10
+# max improvements which are allowed to be approximately the same
+max_same_improvement = 10
+# treshold value for which improvements are approximately the same
+same_improvement = 1
+
+# stochastic hill climbing algorithm
+mat = stoch_steepest_hill(house, magni, total_it, max_same_improvement, same_improvement)
+
+# print solution
+print("stoch hill", house.compute_value())
+
+# draw the stochastic hill climbing solution
 show_grid = Show_grid()
-#mat = house.get_house_matrix()
-for k in range(total_houses + 4):
+mat = house.get_house_matrix()
+for k in range(total_houses):
      show_grid.draw_house(mat[k, :], k)
-#
-## reset matrix to starting solution
-#house.set_house_matrix(mat_copy)
-#     
-## simulated annealing algorithm  parameters
-#start_temp = 1000
-#end_temp = 10
-#acceptance_limit = 0.1
-#
-#for iteration in range(total_it):
-#    mat = sim_ann(house, iteration, total_it, start_temp, end_temp, acceptance_limit, magni)
-#    price = house.compute_value()
-#house.set_house_matrix(mat)
-#
-#ann.append(price)
-## print solution   
-#print("sim annealing", price)
-#
-## draw the simulated annealing algorithm solution
-#show_grid = Show_grid()
-#mat = house.get_house_matrix()
-#for k in range(total_houses):
-#     show_grid.draw_house(mat[k, :], k)
+
+# reset matrix to starting solution
+house.set_house_matrix(mat_copy)
+     
+# simulated annealing algorithm  parameters
+start_temp = 1000
+end_temp = 10
+acceptance_limit = 0.1
+
+mat = sim_ann(house, total_it, start_temp, end_temp, acceptance_limit,
+              magni, max_same_improvement, same_improvement)
+
+# print solution   
+print("sim annealing", house.compute_value())
+
+# draw the simulated annealing algorithm solution
+show_grid = Show_grid()
+mat = house.get_house_matrix()
+for k in range(total_houses):
+     show_grid.draw_house(mat[k, :], k)
+     
+     
+# reset matrix to starting solution
+house.set_house_matrix(mat_copy)
+
+
+# stochastic hill climbing algorithm
+mat = stoch_steepest_hill(house, magni, total_it, max_same_improvement, same_improvement)
+mat = sim_ann(house, total_it, start_temp, end_temp, acceptance_limit,
+              magni, max_same_improvement, same_improvement)
+# print solution
+print("combi", house.compute_value())

@@ -26,14 +26,33 @@ import math
 from check_house import check_house
 from gen_improvement import gen_improv
 
-def sim_ann(houses, n, N, T0, TN, min_chance, magni):
+def sim_ann(houses, N, T0, TN, min_chance, magni, stop_improv, criteria):
+    
+    # count iterations
+    n = 0
+    # count last stop_improv iterations
+    counter = 0
+    
+    while n < N and counter < stop_improv:
+        n += 1
+        mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
+        houses.compute_value()
+        if improvement < criteria:
+            counter += 1
+        else: 
+            counter = 0    
+    houses.set_house_matrix(mat)
+    return houses.get_house_matrix()
+
+
+def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
     
     # choose a random house to move
     house = random.randint(0, houses.total_houses - 1)
     
     # set up for while loop
     improvement = -1
-    max_repeats = 4000
+    max_repeats = 4
     counter = 0
     
     # geef als parameter temperatuur afname structuur mee en kies hier dan juiste
@@ -41,7 +60,6 @@ def sim_ann(houses, n, N, T0, TN, min_chance, magni):
     # exp: curr_temp = math.pow(T0*(TN/T0),(n/N))
     # sigmoidal: curr_temp = TN + (T0-TN)/(1 + math.exp(0.3*n-N/2))
     # geman: curr_temp = c/math.log(n) + d --> c en d?
-    
     
     # calculate old value and store old matrix
     old_value = houses.compute_value().copy()
@@ -82,4 +100,4 @@ def sim_ann(houses, n, N, T0, TN, min_chance, magni):
                 matrix_improv = matrix_old
                 break
 
-    return matrix_improv
+    return matrix_improv, improvement
