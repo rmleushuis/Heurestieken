@@ -55,6 +55,8 @@ class House(object):
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
                                        np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
                                        np.repeat(3, np.round(PERC_VIL * self.total_houses))))
+        # shuffle
+        np.random.shuffle(matrix[:, 4])
         matrix[:, 7] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['height']))(matrix[:, 4])
         matrix[:, 8] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['width']))(matrix[:, 4])
         matrix[:, 9] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['free']))(matrix[:, 4])

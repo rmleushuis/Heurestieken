@@ -28,22 +28,22 @@ random = []
 stoch = []
 ann = []
 
-
-# create the class for houses and generate random solution
-house = House(total_houses)
-
-# link the starting solution
-mat = house.get_house_matrix()
-# store a copy of the starting solution
-mat_copy = house.get_house_matrix().copy()
-value = house.compute_value()
-print("random", value)
-random.append(value)
+for i in range(1000):
+    # create the class for houses and generate random solution
+    house = House(total_houses)
+    
+    # link the starting solution
+    mat = house.get_house_matrix()
+    # store a copy of the starting solution
+    mat_copy = house.get_house_matrix().copy()
+    value = house.compute_value()
+    print("random", value)
+    random.append(value)
 
 # number of iterations the algorithm has to perform
-total_it = 20
+total_it = 100
 # magnitude of maximal step in generate improvement
-magni = 50
+magni = 10
 
 # stochastic hill climbing algorithm
 for iteration in range(total_it):
