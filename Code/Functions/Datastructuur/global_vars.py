@@ -5,12 +5,20 @@ This file has all global variables which are used in other python documents.
 PERC_SOLO = 0.6
 PERC_BUNG = 0.25
 PERC_VIL = 0.15
+WATER_PERC = 0.20
 
 # define the grid and the different houses
 GRID = {'width': 160, 'height': 180}
 HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2, 'price': 285000, 'interest': 0.03},
                '2': {'height': 10,'width': 7.5,'free': 3, 'price': 399000, 'interest': 0.04},
-               '3': {'height': 11,'width': 10.5,'free': 4, 'price': 610000, 'interest': 0.06}}
+               '3': {'height': 11,'width': 10.5,'free': 4, 'price': 610000, 'interest': 0.06},
+               '4': {'height': 0,'width': 0,'free': 0, 'price': 0, 'interest': 0,
+                     'height_width_ratio_min': 1, 'height_width_ratio_max': 4}}
+
+WATER_M2 = WATER_PERC * ( GRID['width'] * GRID['height'] )
+MAX_WATERS = 4
+
+WATER_M2_REMAINING = WATER_M2
 
 # define which column of the matrix the minimum distance function should grab
 # for house i

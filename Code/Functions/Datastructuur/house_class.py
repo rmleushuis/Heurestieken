@@ -10,14 +10,14 @@ sys.path.append(os.path.join(directory, "functions/datastructuur"))
 sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import global vars
-from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL
+from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID, MAX_WATERS, WATER_M2_REMAINING
 from global_vars import HOUSE_CHARS
 
 # import start solution class
 from start_sol import Start_sol
 
 # import necessary functions
-from check_house import check_house
+from check_house import check_house, check_water
 
 # import necessary modules
 import numpy as np
@@ -28,6 +28,7 @@ class House(object):
         self.matrix = self.create_house_matrix()
         self.matrix = Start_sol(self.matrix).fill_house_matrix()
         self.value = self.compute_value()
+        self.water_m2_remaining = WATER_M2_REMAINING
         
     def create_house_matrix(self):
         """
@@ -37,7 +38,7 @@ class House(object):
             1) y_1 (y coordinate of top right corner)
             2) x_2 (x coordinate of bottom left corner)
             3) y_2 (y coordinate of bottom left corner)
-            4) house type (1 = solo, 2 = bungalow, 3 = villa)
+            4) type (1 = solo, 2 = bungalow, 3 = villa, 4 = water)
             5) rotated (0 = no rotation, 1 = 90 degree rotation)
             6) distance (minimum distance to other house, wall to wall)
            constants:
@@ -49,14 +50,15 @@ class House(object):
         """
 
         # create an empty matrix
-        matrix = np.zeros(shape = (self.total_houses, 12))
+        matrix = np.zeros(shape = (self.total_houses + MAX_WATERS, 12))
         
         # generate the different types of houses with their characteristics
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
                                        np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
-                                       np.repeat(3, np.round(PERC_VIL * self.total_houses))))
+                                       np.repeat(3, np.round(PERC_VIL * self.total_houses)),
+                                       np.repeat(4, MAX_WATERS)))
         # shuffle
-        np.random.shuffle(matrix[:, 4])
+#        np.random.shuffle(matrix[:, 4])
         matrix[:, 7] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['height']))(matrix[:, 4])
         matrix[:, 8] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['width']))(matrix[:, 4])
         matrix[:, 9] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['free']))(matrix[:, 4])
@@ -69,6 +71,16 @@ class House(object):
     def get_house_matrix(self):
         return self.matrix
     
+    def create_water(self):
+        for i in range(-4, 0):
+            while True:
+                self.matrix[i, 0] = np.random.uniform(0, GRID['width'])
+                self.matrix[i, 1] = np.random.uniform(0, GRID['height'])
+                self.matrix[i, 2] = np.random.uniform(self.matrix[i, 0], GRID['width'])
+                self.matrix[i, 3] = np.random.uniform(0, self.matrix[i, 1])
+                valid = check_water(i, self.matrix, self.water_m2_remaining)
+                if valid == 0:
+                    break
 #     change house matrix
     def set_house_matrix(self, matrix):
         

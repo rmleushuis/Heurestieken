@@ -45,9 +45,15 @@ class Show_grid():
         
         measures = {'lowerleft': (new_house[0], new_house[3]),
                     'width': new_house[2] - new_house[0],
-                    'height': new_house[1] - new_house[3]}
+                    'height': new_house[1] - new_house[3],
+                    'type': new_house[4]}
+        
+        color = {1:'g',
+                 2:'r',
+                 3:'y',
+                 4:'blue'}
         
         self.ax.add_patch(patches.Rectangle(measures['lowerleft'],
                                                  measures['width'], 
-                                                 measures['height']))
-        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(" "))
+                                                 measures['height'], color = color[measures['type']]))
+        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(index))
