@@ -41,20 +41,18 @@ value = house.compute_value()
 print("random", value)
 random.append(value)
 
-## number of iterations the algorithm has to perform
-#total_it = 50
-## magnitude of maximal step in generate improvement
-#magni = 10
-#
-## stochastic hill climbing algorithm
-#for iteration in range(total_it):
-#    mat = stoch_steepest_hill(house, magni)
-#    price = house.compute_value()
-#house.set_house_matrix(mat)
-#
-#stoch.append(price)
-## print solution
-#print("stoch hill", price)
+# number of iterations the algorithm has to perform
+total_it = 50
+# magnitude of maximal step in generate improvement
+magni = 10
+
+# stochastic hill climbing algorithm
+for iteration in range(total_it):
+    mat = stoch_steepest_hill(house, magni)
+    price = house.compute_value()
+house.set_house_matrix(mat)
+
+print("stoch hill", price)
 #
 ## draw the stochastic hill climbing solution
 show_grid = Show_grid()
