@@ -22,7 +22,25 @@ import random
 from check_house import check_house
 from gen_improvement import gen_improv
 
-def stoch_steepest_hill(houses, magni):
+def stoch_steepest_hill(houses, magni, max_it, stop_improv, criteria):
+    
+    # count iterations
+    n = 0
+    # count last stop_improv iterations
+    counter = 0
+    
+    while n < max_it and counter < stop_improv:
+        n += 1
+        mat, improvement = stoch_steepest_hill_step(houses, magni)
+        houses.compute_value()
+        if improvement < criteria:
+            counter += 1
+        else: 
+            counter = 0    
+    houses.set_house_matrix(mat)
+    return houses.get_house_matrix()
+
+def stoch_steepest_hill_step(houses, magni):
     
     # choose a random house to move
     house = random.randint(0, houses.total_houses - 1)
@@ -30,7 +48,7 @@ def stoch_steepest_hill(houses, magni):
     # set up for while loop
     improvement = -1
     new_value  = 'nan'
-    max_repeats = 4000
+    max_repeats = 4
     counter = 0
     
     # calculate  old value and store old matrix
@@ -48,13 +66,12 @@ def stoch_steepest_hill(houses, magni):
         
         # if new position is valid
         if valid == 0 :
-            
             # calculate new value
             houses.set_house_matrix(matrix_improv)
-            new_value = houses.compute_value()
-            
+            new_value = houses.compute_value()   
             # calculate improvement
             improvement = new_value - old
+
         
         # if new position is not valid or the improvement is negative
         if valid == 1 or improvement < 0:
@@ -64,6 +81,7 @@ def stoch_steepest_hill(houses, magni):
             # continue until max_repeats is reached
             if max_repeats == counter:
                 matrix_improv = matrix_old
+                matrix_improv, improvement = stoch_steepest_hill_step(houses,magni)
                 break
 
-    return matrix_improv
+    return matrix_improv, improvement
