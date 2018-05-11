@@ -47,24 +47,26 @@ class House(object):
             9) free space (minimum free space needed for the type house)
             10) price (price of the type house)
             11) interest (percentage received for each extra meter of free space)
+            12) extra-worth/m2 ratio
+            13) diagonal
         """
 
         # create an empty matrix
-        matrix = np.zeros(shape = (self.total_houses + MAX_WATERS, 12))
+        matrix = np.zeros(shape = (self.total_houses, 14))
         
         # generate the different types of houses with their characteristics
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
                                        np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
                                        np.repeat(3, np.round(PERC_VIL * self.total_houses)),
-                                       np.repeat(4, MAX_WATERS)))
+                                       ))
         # shuffle
-#        np.random.shuffle(matrix[:, 4])
+        np.random.shuffle(matrix[:, 4])
         matrix[:, 7] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['height']))(matrix[:, 4])
         matrix[:, 8] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['width']))(matrix[:, 4])
         matrix[:, 9] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['free']))(matrix[:, 4])
         matrix[:, 10] = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['price']))(matrix[:, 4])
         matrix[:, 11] = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['interest']))(matrix[:, 4])
-        
+        matrix[:, 12] = matrix[:, 11] * matrix[:, 10] / (matrix[:, 9] * matrix[:, 8] * 2 + matrix[:, 9] * matrix[:, 7] * 2)
         return matrix
     
     # request house matrix

@@ -51,29 +51,34 @@ def check_house(house, house_mat):
     free_space = np.max(free_space, 1)
     
     first_condition = np.logical_and( x1 >= (right_side + free_space) ,
-                                      np.logical_or( np.logical_and( y1 <= top_side,
+                                      np.logical_or.reduce(( np.logical_and( y1 <= top_side,
                                       y1 >= bottom_side ), np.logical_and( y2 <= top_side,
-                                      y2 >= bottom_side )))
-    second_condition = np.logical_and( x1 >= (right_side + free_space),
-                                       y1 <= (bottom_side - free_space) )
+                                      y2 >= bottom_side ), np.logical_and(y2 <= bottom_side, y1 >= top_side),
+                                        np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+    second_condition = np.logical_and( x1 > (right_side + free_space),
+                                       y1 < (bottom_side - free_space) )
     third_condition = np.logical_and( y1 <= (bottom_side - free_space),
-                                      np.logical_or( np.logical_and( x1 <= right_side,
+                                      np.logical_or.reduce(( np.logical_and( x1 <= right_side,
                                       x1 >= left_side ), np.logical_and( x2 <= right_side,
-                                      x2 >= left_side )))
-    fourth_condition = np.logical_and( y1 <= (bottom_side - free_space),
-                                      x2 <= (left_side - free_space) )
+                                      x2 >= left_side ), np.logical_and(x1 <= left_side, x2 >= right_side),
+                                        np.logical_and( x1 >= left_side, x2 <= right_side))))
+    fourth_condition = np.logical_and( y1 < (bottom_side - free_space),
+                                      x2 < (left_side - free_space) )
+       
     fifth_condition = np.logical_and( x2 <= (left_side - free_space),
-                                      np.logical_or( np.logical_and( y1 <= top_side,
-                                      y1 >= bottom_side ), np.logical_or( y2 <= top_side,
-                                      y2 >= bottom_side )))
-    sixth_condition = np.logical_and( x2 <= (left_side - free_space),
-                                      y2 >= (top_side + free_space) )
+                                      np.logical_or.reduce(( np.logical_and( y1 <= top_side,
+                                      y1 >= bottom_side ), np.logical_and( y2 <= top_side,
+                                      y2 >= bottom_side ), np.logical_and( y2 <= bottom_side, y1 >= top_side),
+                                        np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+    sixth_condition = np.logical_and( x2 < (left_side - free_space),
+                                      y2 > (top_side + free_space) )
     seventh_condition = np.logical_and( y2 >= (top_side +  free_space),
-                                        np.logical_or( np.logical_and( x1 <= right_side,
+                                        np.logical_or.reduce(( np.logical_and( x1 <= right_side,
                                         x1 >= left_side ), np.logical_and( x2 <= right_side,
-                                        x2 >= left_side )))
-    eigth_condition = np.logical_and( y2 >= (top_side + free_space),
-                                      x1 >= (right_side + free_space) )
+                                        x2 >= left_side ), np.logical_and( x1 <= left_side, x2 >= right_side),
+                                        np.logical_and( x1 >= left_side, x2 <= right_side))))
+    eigth_condition = np.logical_and( y2 > (top_side + free_space),
+                                      x1 > (right_side + free_space) )
     
     ninth_condition = x1 >= free_space_cur
     
@@ -95,7 +100,9 @@ def check_house(house, house_mat):
     
     
     # check if the location of the tested house violates minimum distance rules
-    if all( all_cond.sum(0) >= 1 ) and all( grid_cond == 1):
+#    print(all_cond)
+    if all( all_cond.sum(0) == 1 ) and all( grid_cond == 1):
+
         positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
         distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )
@@ -103,8 +110,10 @@ def check_house(house, house_mat):
         # calculate the minimum distance of the house to other houses
         for i in range(len(distance_ind)):
             plane = distance_ind[i]
-            m = positions[DIST2[str(plane)]] - filled_houses_mat[i, DIST[str(plane)]]
+#            print(plane)
+            m = np.abs(positions[DIST2[str(plane)]] - filled_houses_mat[i, DIST[str(plane)]]) 
             # if even
+#            print(plane, m)
             if plane % 2 == 0:
                 distances[i] = np.abs(m) - free_space_cur
             # if odd
@@ -115,7 +124,7 @@ def check_house(house, house_mat):
         distances[-2] = (GRID['height'] - free_space_cur) - y1
         distances[-3] = (GRID['width'] - free_space_cur) - x2
         distances[-4] = x1 - free_space_cur
-            
+#        print(distances)
         # house does not violate requirement
         return 0, distances
     else:
@@ -150,29 +159,34 @@ def check_water(house, house_mat, water_m2_remaining):
     free_space = np.max(free_space, 1)
     
     first_condition = np.logical_and( x1 >= (right_side + free_space) ,
-                                      np.logical_or( np.logical_and( y1 <= top_side,
+                                      np.logical_or.reduce(( np.logical_and( y1 <= top_side,
                                       y1 >= bottom_side ), np.logical_and( y2 <= top_side,
-                                      y2 >= bottom_side )))
-    second_condition = np.logical_and( x1 >= (right_side + free_space),
-                                       y1 <= (bottom_side - free_space) )
+                                      y2 >= bottom_side ), np.logical_and(y2 <= bottom_side, y1 >= top_side),
+                                        np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+    second_condition = np.logical_and( x1 > (right_side + free_space),
+                                       y1 < (bottom_side - free_space) )
     third_condition = np.logical_and( y1 <= (bottom_side - free_space),
-                                      np.logical_or( np.logical_and( x1 <= right_side,
+                                      np.logical_or.reduce(( np.logical_and( x1 <= right_side,
                                       x1 >= left_side ), np.logical_and( x2 <= right_side,
-                                      x2 >= left_side )))
-    fourth_condition = np.logical_and( y1 <= (bottom_side - free_space),
-                                      x2 <= (left_side - free_space) )
+                                      x2 >= left_side ), np.logical_and(x1 <= left_side, x2 >= right_side),
+                                        np.logical_and( x1 >= left_side, x2 <= right_side))))
+    fourth_condition = np.logical_and( y1 < (bottom_side - free_space),
+                                      x2 < (left_side - free_space) )
+       
     fifth_condition = np.logical_and( x2 <= (left_side - free_space),
-                                      np.logical_or( np.logical_and( y1 <= top_side,
-                                      y1 >= bottom_side ), np.logical_or( y2 <= top_side,
-                                      y2 >= bottom_side )))
-    sixth_condition = np.logical_and( x2 <= (left_side - free_space),
-                                      y2 >= (top_side + free_space) )
+                                      np.logical_or.reduce(( np.logical_and( y1 <= top_side,
+                                      y1 >= bottom_side ), np.logical_and( y2 <= top_side,
+                                      y2 >= bottom_side ), np.logical_and( y2 <= bottom_side, y1 >= top_side),
+                                        np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+    sixth_condition = np.logical_and( x2 < (left_side - free_space),
+                                      y2 > (top_side + free_space) )
     seventh_condition = np.logical_and( y2 >= (top_side +  free_space),
-                                        np.logical_or( np.logical_and( x1 <= right_side,
+                                        np.logical_or.reduce(( np.logical_and( x1 <= right_side,
                                         x1 >= left_side ), np.logical_and( x2 <= right_side,
-                                        x2 >= left_side )))
-    eigth_condition = np.logical_and( y2 >= (top_side + free_space),
-                                      x1 >= (right_side + free_space) )
+                                        x2 >= left_side ), np.logical_and( x1 <= left_side, x2 >= right_side),
+                                        np.logical_and( x1 >= left_side, x2 <= right_side))))
+    eigth_condition = np.logical_and( y2 > (top_side + free_space),
+                                      x1 > (right_side + free_space) )
     
     ninth_condition = x1 >= 0.0
     

@@ -36,10 +36,12 @@ class Start_sol():
         self.total_houses = len(matrix)
         self.distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         
-    def fill_house_matrix(self):
+    def fill_house_matrix(self, sorted_ = False):
         total_houses = self.total_houses
         house_matrix = self.house_matrix
         max_repeats = 40000
+        if sorted_ == True:
+            house_matrix = house_matrix[house_matrix[:, 4].argsort()[::-1]].copy()
         i = 0
         while i < total_houses:
             counter = 0
@@ -79,7 +81,7 @@ class Start_sol():
         # generate a starting solution 
         
     
-    def generate_house(self, matrix, house_num):
+    def generate_house(self, matrix, house_num, sorted_ = False):
             
         # generate a random coordinates for the left right corner of a house
         cur_house_height = matrix[house_num, 7]
@@ -90,13 +92,14 @@ class Start_sol():
         r = np.random.choice([0,1])
         #matrix[house_num, 6] =r
         
-        matrix[house_num, 0] = np.random.uniform(low = 0 + cur_house_free,
-                               high = GRID['width'] - (1-r) * cur_house_width - r * cur_house_height -
-                               cur_house_free)
-                        
-        matrix[house_num, 1] = np.random.uniform(low = 0 + (1-r) * cur_house_height + r * cur_house_width + cur_house_free,
-              high = GRID['height'] - cur_house_free)
-        matrix[house_num, 2] = matrix[house_num, 0] + (1 - r) * cur_house_width + r * cur_house_height
-        matrix[house_num, 3] = matrix[house_num, 1] - (1 - r) * cur_house_height - r * cur_house_width
-    
+        if sorted_ == False:    
+            matrix[house_num, 0] = np.random.uniform(low = 0 + cur_house_free,
+                                   high = GRID['width'] - (1-r) * cur_house_width - r * cur_house_height -
+                                   cur_house_free)
+                            
+            matrix[house_num, 1] = np.random.uniform(low = 0 + (1-r) * cur_house_height + r * cur_house_width + cur_house_free,
+                  high = GRID['height'] - cur_house_free)
+            matrix[house_num, 2] = matrix[house_num, 0] + (1 - r) * cur_house_width + r * cur_house_height
+            matrix[house_num, 3] = matrix[house_num, 1] - (1 - r) * cur_house_height - r * cur_house_width
+        
         return matrix

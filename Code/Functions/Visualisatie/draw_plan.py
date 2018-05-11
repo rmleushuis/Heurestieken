@@ -41,7 +41,7 @@ class Show_grid():
         self.ax.set_ybound(0, GRID['height'])
         plt.gca().set_aspect('equal', adjustable='box')
         
-    def draw_house(self, new_house, index):
+    def draw_house(self, new_house, index, numbers = False, types = None):
         
         measures = {'lowerleft': (new_house[0], new_house[3]),
                     'width': new_house[2] - new_house[0],
@@ -52,8 +52,13 @@ class Show_grid():
                  2:'r',
                  3:'y',
                  4:'blue'}
-        
-        self.ax.add_patch(patches.Rectangle(measures['lowerleft'],
-                                                 measures['width'], 
-                                                 measures['height'], color = color[measures['type']]))
-        plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(index))
+        if types == None:
+            self.ax.add_patch(patches.Rectangle(measures['lowerleft'],
+                                                     measures['width'], 
+                                                     measures['height'], color = color[measures['type']]))
+        if types == 'circles':
+            self.ax.add_patch(patches.Ellipse((measures['lowerleft'][0]+ measures['width']/2, measures['lowerleft'][1] + measures['height']/2),
+                                              width = 2*(measures['width']/2 + new_house[9] + new_house[6]), height = 2*(measures['height']/2 + new_house[9] + new_house[6]), angle = 360))
+                                        
+        if numbers == True:
+            plt.text(measures['lowerleft'][0], measures['lowerleft'][1], str(index))

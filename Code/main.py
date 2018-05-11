@@ -21,7 +21,7 @@ from simulated_annealing import sim_ann
 total_houses = [20, 40, 60]
 
 # select a version of the problem
-total_houses = 60
+total_houses = 20
 
 # make lists to store the solutions in
 random = []
@@ -31,7 +31,7 @@ ann = []
 
 # create the class for houses and generate random solution
 house = House(total_houses)
-house.create_water()
+#house.create_water()
 
 # link the starting solution
 mat = house.get_house_matrix()
@@ -59,7 +59,7 @@ random.append(value)
 ## draw the stochastic hill climbing solution
 show_grid = Show_grid()
 #mat = house.get_house_matrix()
-for k in range(total_houses + 4):
+for k in range(total_houses):
      show_grid.draw_house(mat[k, :], k)
 #
 ## reset matrix to starting solution
