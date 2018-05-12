@@ -28,8 +28,7 @@ class House(object):
         self.matrix = self.create_house_matrix()
         self.matrix = Start_sol(self.matrix).fill_house_matrix()
         self.value = self.compute_value()
-        self.water_m2_remaining = WATER_M2_REMAINING
-        
+       
     def create_house_matrix(self):
         """
         The house matrix consists of the following columns:
@@ -73,16 +72,6 @@ class House(object):
     def get_house_matrix(self):
         return self.matrix
     
-    def create_water(self):
-        for i in range(-4, 0):
-            while True:
-                self.matrix[i, 0] = np.random.uniform(0, GRID['width'])
-                self.matrix[i, 1] = np.random.uniform(0, GRID['height'])
-                self.matrix[i, 2] = np.random.uniform(self.matrix[i, 0], GRID['width'])
-                self.matrix[i, 3] = np.random.uniform(0, self.matrix[i, 1])
-                valid = check_water(i, self.matrix, self.water_m2_remaining)
-                if valid == 0:
-                    break
 #     change house matrix
     def set_house_matrix(self, matrix):
         

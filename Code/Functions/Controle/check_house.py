@@ -133,7 +133,7 @@ def check_house(house, house_mat):
     
     
 def check_water(house, house_mat, water_m2_remaining):
-        # width height
+    # width height
     x1 = house_mat[house, 0]
     y1 = house_mat[house, 1]
     x2 = house_mat[house, 2]

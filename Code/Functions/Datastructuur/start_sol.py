@@ -30,7 +30,6 @@ import numpy as np
 show_grid = Show_grid()
 
 class Start_sol():
-    
     def __init__(self, matrix):
         self.house_matrix = matrix
         self.total_houses = len(matrix)
@@ -90,7 +89,7 @@ class Start_sol():
         
         # rotate house 90 degrees
         r = np.random.choice([0,1])
-        #matrix[house_num, 6] =r
+        matrix[house_num, 5]  = r
         
         if sorted_ == False:    
             matrix[house_num, 0] = np.random.uniform(low = 0 + cur_house_free,
