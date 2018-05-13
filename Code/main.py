@@ -42,7 +42,7 @@ random.append(value)
 
  
 # number of iterations the algorithm has to perform
-total_it = 100
+total_it = 10
 # magnitude of maximal step in generate improvement
 magni = 10
 # max improvements which are allowed to be approximately the same
@@ -51,7 +51,7 @@ max_same_improvement = 100
 same_improvement = 1
 
 # stochastic hill climbing algorithm
-mat = stoch_steepest_hill(house, magni, total_it, max_same_improvement, same_improvement)
+mat = stoch_steepest_hill(house, total_it, max_same_improvement, same_improvement)
  
 # print solution
 print("stoch hill", house.compute_value())
@@ -88,7 +88,7 @@ house.set_house_matrix(mat_copy)
  
  
 # stochastic hill climbing algorithm
-mat = stoch_steepest_hill(house, magni, total_it, max_same_improvement, same_improvement)
+mat = stoch_steepest_hill(house, total_it, max_same_improvement, same_improvement)
 mat = sim_ann(house, total_it, start_temp, end_temp, acceptance_limit,
               magni, max_same_improvement, same_improvement)
 # print solution

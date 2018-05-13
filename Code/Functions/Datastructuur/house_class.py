@@ -1,23 +1,12 @@
-# import necessary modules
-import os, sys
-
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
-
 # import global vars
-from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID, MAX_WATERS, WATER_M2_REMAINING
+from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL
 from global_vars import HOUSE_CHARS
 
 # import start solution class
 from start_sol import Start_sol
 
 # import necessary functions
-from check_house import check_house, check_water
+from check_house import check_house
 
 # import necessary modules
 import numpy as np

@@ -5,33 +5,43 @@ Input:  class containing the matrix and magnitude of max change
 Output: plan of the optimized house positions
 """
 # import necessary modules
-import os, sys
-
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
-
-# import necessary modules
 import random
+import numpy as np
 
 # import functions from other documents
 from check_house import check_house
 from gen_improvement import gen_improv
 
-def stoch_steepest_hill(houses, magni, max_it, stop_improv, criteria):
+
+def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
     
     # count iterations
     n = 0
     # count last stop_improv iterations
     counter = 0
+    # count how often a step can be repeated
+    counter2 = 0
     
     while n < max_it and counter < stop_improv:
+        if n == 0:
+            alpha = 4
+            beta = 4
+            eps = 4
+            magni = alpha + beta + eps
+            mat, improvement = stoch_steepest_hill_step(houses, magni, counter2)
+            old_value = houses.compute_value().copy()
+        else:
+            # function which account for the position of the step in the total number of steps
+            alpha = (max_it/n)**(1/3) * 50 * (20/houses.total_houses)**3
+            # function which account for past improvement
+            beta = improvement/old_value * 100
+            # random component to change possible direction
+            epsilon = np.random.uniform(low = 0 , high = 2*(alpha + beta))
+            # calculate total range
+            magni = 1/10 * (alpha + beta + epsilon)
+            mat, improvement = stoch_steepest_hill_step(houses, magni, counter2)
+            old_value = houses.compute_value().copy()
         n += 1
-        mat, improvement = stoch_steepest_hill_step(houses, magni)
         houses.compute_value()
         if improvement < criteria:
             counter += 1
@@ -40,7 +50,7 @@ def stoch_steepest_hill(houses, magni, max_it, stop_improv, criteria):
     houses.set_house_matrix(mat)
     return houses.get_house_matrix()
 
-def stoch_steepest_hill_step(houses, magni):
+def stoch_steepest_hill_step(houses, magni, counter2):
     
     # choose a random house to move
     house = random.randint(0, houses.total_houses - 1)
@@ -80,8 +90,12 @@ def stoch_steepest_hill_step(houses, magni):
             
             # continue until max_repeats is reached
             if max_repeats == counter:
+                counter2 += 1
                 matrix_improv = matrix_old
-                matrix_improv, improvement = stoch_steepest_hill_step(houses,magni)
+                if counter2 < 21:
+                    matrix_improv, improvement = stoch_steepest_hill_step(houses,magni, counter2)
+                else:
+                    continue
                 break
 
     return matrix_improv, improvement

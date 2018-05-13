@@ -7,17 +7,6 @@ Input: coordinates of top left an bottom right corners, index of the house and
 Output: 0 if the house violates the minimum distance required
         1 if the house does not violate the minimum distance required
 """
-# import necessary modules
-import os, sys
-
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
-
 # import global_vars
 from global_vars import DIST, DIST2, GRID
 
