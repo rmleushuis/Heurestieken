@@ -7,16 +7,6 @@ Input:  class containing the matrix, current iteration (n), starting temperature
         accepted (min_chance)
 Output: plan of the optimized house positions
 """
-# import necessary modules
-import os, sys
-
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import necessary modules
 import random
