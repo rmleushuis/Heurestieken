@@ -3,7 +3,8 @@ This function first uses a stochastic hill climbing algorithm to find a maxima.
 To reduce the change that it is a local maxima, it then uses a simulated 
 annealing algorithm.
  
-Input:  class containing the matrix and magnitude of max change
+Input:  class containing the matrix, total iterations, starting temperature,
+        end temperature, minimum change that is accepted, .................
 Output: plan of the optimized house positions
 """
  

@@ -12,10 +12,13 @@ import random
 from check_house import check_house
 
 
-def gen_improv(matrix, house, magni):
+def gen_improv(matrix, house, magni, swap_allowed):
     
     # decide whether to random swap or random move a house
-    decision = random.randint(0, 1)
+    if swap_allowed:
+        decision = random.randint(0, 1)
+    else:
+        decision = 0
     
     if decision == 0:
         matrix = move_house(matrix, house, magni)

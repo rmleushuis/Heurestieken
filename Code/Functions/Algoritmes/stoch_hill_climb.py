@@ -76,7 +76,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 1)
         
         # calculate distance
         valid, distance = check_house(house, matrix_improv)

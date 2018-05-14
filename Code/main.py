@@ -17,6 +17,7 @@ from draw_plan import Show_grid
 from stoch_hill_climb import stoch_steepest_hill
 from simulated_annealing import sim_ann
 from hill_and_annealing_combination import hill_ann_combi
+from min_max import min_max_alg
  
 # define the 3 versions of the problem
 total_houses = [20, 40, 60]
@@ -69,7 +70,7 @@ house.set_house_matrix(mat_copy)
 # simulated annealing algorithm  parameters
 start_temp = 1000
 end_temp = 10
-acceptance_limit = 0.1
+acceptance_limit = 0.5
  
 mat = sim_ann(house, total_it, start_temp, end_temp, acceptance_limit,
               magni, max_same_improvement, same_improvement)
@@ -101,4 +102,17 @@ mat = house.get_house_matrix()
 for k in range(total_houses):
      show_grid.draw_house(mat[k, :], k)
 
+# reset matrix to starting solution
+house.set_house_matrix(mat_copy)
 
+mat = min_max_alg(house, total_it, start_temp, end_temp, acceptance_limit, magni, 
+                  max_same_improvement, same_improvement, max_times, total_houses)
+
+# print solution   
+print("min max", house.compute_value())
+ 
+# draw the simulated annealing algorithm solution
+show_grid = Show_grid()
+mat = house.get_house_matrix()
+for k in range(total_houses):
+     show_grid.draw_house(mat[k, :], k)
