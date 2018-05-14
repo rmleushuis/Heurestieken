@@ -95,7 +95,6 @@ def hill(houses, max_it, stop_improv, criteria):
             old_value = houses.compute_value().copy()
         n += 1
         houses.compute_value()
-        print(houses.compute_value())
         if improvement < criteria:
             counter += 1
         else: 
