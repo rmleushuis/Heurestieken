@@ -1,22 +1,12 @@
 """
 This function uses a simulated annealing algorithm to find a local maxima.
  
-Input:  class containing the matrix, current iteration (n), starting temperature 
+Input:  class containing the matrix, starting temperature 
         (T0) that will go to ending temperature (TN) when the 
         maximum number of iterations (N) is reached, the minimum change that is
         accepted (min_chance)
 Output: plan of the optimized house positions
 """
-# import necessary modules
-import os, sys
-
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
 
 # import necessary modules
 import random
@@ -69,7 +59,7 @@ def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 0)
         
         # calculate distance
         valid, distance = check_house(house, matrix_improv)
