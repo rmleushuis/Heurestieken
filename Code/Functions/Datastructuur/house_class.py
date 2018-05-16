@@ -1,23 +1,119 @@
 # import global vars
-from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL
+from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID
 from global_vars import HOUSE_CHARS
 
 # import start solution class
 from start_sol import Start_sol
+from draw_plan import Show_grid
 
 # import necessary functions
 from check_house import check_house
 
 # import necessary modules
 import numpy as np
+import random
+import math
 
 class House(object):
-    def __init__(self, total_houses):
+    def __init__(self, total_houses, create_water = False, create_houses = True):
         self.total_houses = total_houses
         self.matrix = self.create_house_matrix()
-        self.matrix = Start_sol(self.matrix).fill_house_matrix()
+        
+        if create_water == True:
+            water = self.create_water_planes()
+            
+        if create_houses == True:
+            self.matrix[( create_water * 4 ):,:] = Start_sol(self.matrix, create_water).fill_house_matrix()
+
+        # delete rows
+        if water == 1:
+            self.matrix = np.delete(self.matrix, 1, 0)
+            self.matrix = np.delete(self.matrix, 1, 0)
+            self.matrix = np.delete(self.matrix, 1, 0)
+        elif water == 2:
+            self.matrix = np.delete(self.matrix, 2, 0)
+            self.matrix = np.delete(self.matrix, 2, 0)
+        else:
+            self.matrix = np.delete(self.matrix, 3, 0)
+            
         self.value = self.compute_value()
-       
+        
+    def create_water_planes(self):
+        new_matrix = np.zeros(shape = (self.total_houses + 4, self.matrix.shape[1]))
+        new_matrix[4:, :] = self.matrix.copy()
+        water_needed = GRID["height"] * GRID["width"] * 0.2
+        # random water amount
+        random_water = 2
+        print(random_water)
+        
+        # 1 water body
+        if random_water == 1:
+            ratio = np.random.uniform(low = 0.25 , high = 4)
+            width= math.sqrt(water_needed/ratio)
+            height = ratio * width
+            new_matrix[0, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+            new_matrix[0, 1] = np.random.uniform(low = height, high = GRID["height"])
+            new_matrix[0, 2] = new_matrix[0, 0] + width
+            new_matrix[0, 3] = new_matrix[0, 1] - height
+            new_matrix[0, 4] = 4
+            new_matrix[0, 5] = random.randint(0,1)
+            new_matrix[0, 7] = height
+            new_matrix[0, 8] = width
+            
+        # 2 water bodies
+        if random_water == 2:
+            for i in range(random_water): 
+                if i==0:              
+                    width = np.random.uniform(low = GRID["width"]/4 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    water_left = water_needed-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = GRID["width"]/4 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.1 , high = 4)
+                        height = ratio * width
+                        water_left = water_needed-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[0, 0] + width
+                    new_matrix[i, 3] = new_matrix[0, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                else:
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    width= math.sqrt(water_left/ratio)
+                    height = ratio * width
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[0, 0] + width
+                    new_matrix[i, 3] = new_matrix[0, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
+                    temp_mat[0:2,:] = new_matrix[0:2,:]
+                    temp_mat[2:,:]= new_matrix[4:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[0, 0] + width
+                        new_matrix[i, 3] = new_matrix[0, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
+                        temp_mat[0:2,:] = new_matrix[0:2,:]
+                        temp_mat[2:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+        self.matrix = new_matrix
+        return random_water
+        
+
     def create_house_matrix(self):
         """
         The house matrix consists of the following columns:
@@ -36,11 +132,10 @@ class House(object):
             10) price (price of the type house)
             11) interest (percentage received for each extra meter of free space)
             12) extra-worth/m2 ratio
-            13) diagonal
         """
 
         # create an empty matrix
-        matrix = np.zeros(shape = (self.total_houses, 14))
+        matrix = np.zeros(shape = (self.total_houses, 13))
         
         # generate the different types of houses with their characteristics
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
@@ -67,7 +162,7 @@ class House(object):
         # by changing houses the distances in column 6 also need to be recalculated
         distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         try:
-            for i in range(self.total_houses):
+            for i in range(self.total_houses+4):
                 valid, distance  = check_house(i, matrix)
                 grid_distances = distance[-4:]
                 distance = distance[:-4]
@@ -76,7 +171,7 @@ class House(object):
             i_upper = np.triu_indices(self.total_houses, 1)
             distance_mat[i_upper] = distance_mat.transpose()[i_upper]
             distance_mat[-4:,:] = distance_mat[:,-4:].transpose()
-            matrix[:, 6] = np.min(distance_mat, axis = 0)[:-4]
+            matrix[4:, 6] = np.min(distance_mat, axis = 0)[:-4]
         except:
             for i in range(len(matrix[:,6])):
                 matrix[i, 6]=-1
@@ -90,3 +185,12 @@ class House(object):
         # calculate the total value of the grid
         self.value = sum(matrix[:, 10] + matrix[:, 10] * matrix[:, 6] * matrix[:, 11])
         return self.value 
+    
+    def show_house_grid(self):
+        
+        # draw the stochastic hill climbing solution
+        show_grid = Show_grid()
+        mat = self.matrix
+        for k in range(len(mat)):
+            show_grid.draw_house(mat[k, :], k)
+ 

@@ -66,7 +66,7 @@ def min_score_step(houses, n, N, magni, tot_houses):
     # calculate old value and store old matrix
     matrix_old = houses.get_house_matrix().copy()
     old_score = 0
-    for h in range(tot_houses):
+    for h in range(4, tot_houses+4):
         old_dist = matrix_old[h][6] - matrix_old[h][9]
         old_score += abs(OPTIMUM[str(tot_houses)][str(int(matrix_old[h][4]))] - old_dist)
     print('-------------------------')
@@ -87,7 +87,7 @@ def min_score_step(houses, n, N, magni, tot_houses):
             # calculate new value
             houses.set_house_matrix(matrix_improv)
             new_score = 0
-            for h in range(tot_houses):
+            for h in range(4, tot_houses+4):
                 new_dist = matrix_improv[h][6] - matrix_improv[h][9]
                 new_score += abs(OPTIMUM[str(tot_houses)][str(int(matrix_improv[h][4]))] - new_dist)
         

@@ -20,10 +20,19 @@ import numpy as np
 show_grid = Show_grid()
 
 class Start_sol():
-    def __init__(self, matrix):
-        self.house_matrix = matrix
-        self.total_houses = len(matrix)
+    def __init__(self, matrix, has_water = False):
+        self.water_mat = None
+        self.has_water = has_water
+        
+        if has_water == True:
+            self.water_mat = matrix[:4, :]
+            self.house_matrix = matrix[4:, :]
+        else:
+            self.house_matrix = matrix
+        
+        self.total_houses = len(self.house_matrix)
         self.distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
+        
         
     def fill_house_matrix(self, sorted_ = False):
         total_houses = self.total_houses
@@ -36,7 +45,7 @@ class Start_sol():
             counter = 0
             while True:
                 self.generate_house(house_matrix, i)
-                valid, distance = check_house(i, house_matrix)
+                valid, distance = check_house(i, house_matrix, self.water_mat)
                 if valid == 0:
                     grid_distances = distance[-4:]
                     self.distance_mat[i, -4:] = grid_distances
@@ -52,14 +61,10 @@ class Start_sol():
                         break
                     continue
                     
-                show_grid.draw_house(house_matrix[i, :], i)
                 break
             
             i += 1
             
-        for k in range(total_houses):
-            show_grid.draw_house(house_matrix[k, :], k)
-        
         i_upper = np.triu_indices(total_houses, 1)
         self.distance_mat[i_upper] = self.distance_mat.transpose()[i_upper]
         self.distance_mat[-4:,:] = self.distance_mat[:,-4:].transpose()

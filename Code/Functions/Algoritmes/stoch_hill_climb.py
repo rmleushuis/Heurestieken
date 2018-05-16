@@ -41,7 +41,7 @@ def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
             epsilon = np.random.uniform(low = 0 , high = 0.5*(alpha + beta))
             # calculate total range
             magni = 1/10 * (alpha + beta + epsilon)
-            print(magni)
+
 
             mat, improvement = stoch_steepest_hill_step(houses, magni, counter2)
             old_value = houses.compute_value().copy()

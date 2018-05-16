@@ -32,9 +32,9 @@ stoch = []
 ann = []
 
 # create the class for houses and generate random solution
-house = House(total_houses)
+house = House(total_houses, True, True)
 
- 
+
 # link the starting solution
 mat = house.get_house_matrix()
 # store a copy of the starting solution
@@ -43,9 +43,13 @@ value = house.compute_value()
 print("random", value)
 random.append(value)
 
+show_grid = Show_grid()
+mat = house.get_house_matrix()
+for k in range(len(mat[:,1])):
+     show_grid.draw_house(mat[k, :], k)
  
 # number of iterations the algorithm has to perform
-total_it = 100
+total_it = 10
 # magnitude of maximal step in generate improvement
 magni = 10
 # max improvements which are allowed to be approximately the same
@@ -62,23 +66,9 @@ print("stoch hill", house.compute_value())
 # draw the stochastic hill climbing solution
 show_grid = Show_grid()
 mat = house.get_house_matrix()
-for k in range(total_houses):
+for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
  
-# reset matrix to starting solution
-house.set_house_matrix(mat_copy)
-  
-
-mat, local_max = hill(house, total_it, max_same_improvement, same_improvement)
- 
-# print solution   
-print("hill climbing", house.compute_value())
- 
-# draw the simulated annealing algorithm solution
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(total_houses):
-     show_grid.draw_house(mat[k, :], k)
      
 # reset matrix to starting solution
 house.set_house_matrix(mat_copy)
@@ -97,7 +87,7 @@ print("sim annealing", house.compute_value())
 # draw the simulated annealing algorithm solution
 show_grid = Show_grid()
 mat = house.get_house_matrix()
-for k in range(total_houses):
+for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
      
 # reset matrix to starting solution
@@ -115,7 +105,7 @@ print("combi", house.compute_value())
 # draw the simulated annealing algorithm solution
 show_grid = Show_grid()
 mat = house.get_house_matrix()
-for k in range(total_houses):
+for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
 
 # reset matrix to starting solution
@@ -130,6 +120,6 @@ print("min max", house.compute_value())
 # draw the simulated annealing algorithm solution
 show_grid = Show_grid()
 mat = house.get_house_matrix()
-for k in range(total_houses):
+for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
 
