@@ -67,8 +67,8 @@ def swap(matrix, house, waternum):
             matrix[house, 3] = matrix[house, 1] - (1 - r) * matrix[house, 8] - r * matrix[house, 7]
             
             # check if swapped houses are possible
-            valid1, distance = check_house(house, matrix)
-            valid2, distance = check_house(house_num, matrix)
+            valid1, distance = check_house(house, waternum , matrix)
+            valid2, distance = check_house(house_num, waternum, matrix)
             
             if valid1 + valid2 == 0:
                 break

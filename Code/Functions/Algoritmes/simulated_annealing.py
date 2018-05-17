@@ -59,10 +59,10 @@ def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni, 0)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 0, houses.water_num)
         
         # calculate distance
-        valid, distance = check_house(house, matrix_improv)
+        valid, distance = check_house(house, houses.water_num, matrix_improv)
         
         # if new position is valid
         if valid == 0 :
