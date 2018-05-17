@@ -129,7 +129,7 @@ def steepest_hill_step(houses, counter2,improv_x, improv_y):
         matrix_improv = gen_improv(matrix_copy, house, 1, improv_x, improv_y)
         
         # calculate distance
-        valid, distance = check_house(house, matrix_improv)
+        valid, distance = check_house(house, houses.water_num, matrix_improv)
         
         # if new position is valid
         if valid == 0 :
