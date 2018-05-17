@@ -23,7 +23,7 @@ def gen_improv(matrix, house, magni, swap_allowed, waternum):
     if decision == 0:
         matrix = move_house(matrix, house, magni)
     else:
-        matrix = swap(matrix, house)
+        matrix = swap(matrix, house, waternum)
 
     return matrix
 
@@ -42,11 +42,11 @@ def move_house(matrix, house, magni):
     return matrix
 
 
-def swap(matrix, house):
+def swap(matrix, house, waternum):
     # make copy of matrix
     matrix_copy = matrix.copy()
     
-    for house_num in range(house.water_num, matrix.shape[0]):
+    for house_num in range(waternum, matrix.shape[0]):
         
         if matrix[house_num, 4] != matrix[house, 4] and matrix[house, 4] != 4 :
             x1_copy = matrix[house_num, 0]

@@ -47,7 +47,8 @@ show_grid = Show_grid()
 mat = house.get_house_matrix()
 for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
- 
+
+
 # number of iterations the algorithm has to perform
 total_it = 10
 # magnitude of maximal step in generate improvement
