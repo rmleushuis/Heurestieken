@@ -50,7 +50,7 @@ for k in range(len(mat[:,1])):
 
 
 # number of iterations the algorithm has to perform
-total_it = 10
+total_it =10
 # magnitude of maximal step in generate improvement
 magni = 10
 # max improvements which are allowed to be approximately the same

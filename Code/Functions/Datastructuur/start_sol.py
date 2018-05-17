@@ -17,19 +17,15 @@ from draw_plan import Show_grid
 # import necessary modules
 import numpy as np
 
-show_grid = Show_grid()
+#show_grid = Show_grid()
 
 class Start_sol():
-    def __init__(self, matrix, has_water = False):
+    def __init__(self, matrix, water_num):
         self.water_mat = None
-        self.has_water = has_water
         
-        if has_water == True:
-            self.water_mat = matrix[:4, :]
-            self.house_matrix = matrix[4:, :]
-        else:
-            self.house_matrix = matrix
-        
+        self.water_mat = matrix[:water_num, :]
+        self.house_matrix = matrix[water_num:, :]
+        self.water_num = water_num
         self.total_houses = len(self.house_matrix)
         self.distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         
@@ -45,13 +41,12 @@ class Start_sol():
             counter = 0
             while True:
                 self.generate_house(house_matrix, i)
-                valid, distance = check_house(i, house_matrix, self.water_mat)
+                valid, distance = check_house(i, self.water_num, house_matrix, self.water_mat)
                 if valid == 0:
                     grid_distances = distance[-4:]
                     self.distance_mat[i, -4:] = grid_distances
                     if i != 0:
                         distance = distance[:i]
-
                         self.distance_mat[i, :i] = distance
                         break
                 else:
