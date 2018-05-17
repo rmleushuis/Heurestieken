@@ -62,7 +62,7 @@ def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
 def stoch_steepest_hill_step(houses, magni, counter2):
     
     # choose a random house to move
-    house = random.randint(0, houses.total_houses - 1)
+    house = random.randint(houses.water_num , len(houses.matrix[0,:]))
     
     # set up for while loop
     improvement = -1
@@ -78,7 +78,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni, 1)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 1, houses.water_num)
         
         # calculate distance
         valid, distance = check_house(house, matrix_improv)

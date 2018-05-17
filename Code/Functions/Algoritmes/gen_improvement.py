@@ -12,7 +12,7 @@ import random
 from check_house import check_house
 
 
-def gen_improv(matrix, house, magni, swap_allowed):
+def gen_improv(matrix, house, magni, swap_allowed, waternum):
     
     # decide whether to random swap or random move a house
     if swap_allowed:
@@ -46,9 +46,9 @@ def swap(matrix, house):
     # make copy of matrix
     matrix_copy = matrix.copy()
     
-    for house_num in range(matrix.shape[0]):
+    for house_num in range(house.water_num, matrix.shape[0]):
         
-        if matrix[house_num, 4] != matrix[house, 4]:
+        if matrix[house_num, 4] != matrix[house, 4] and matrix[house, 4] != 4 :
             x1_copy = matrix[house_num, 0]
             y1_copy = matrix[house_num, 1]
             

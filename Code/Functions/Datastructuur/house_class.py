@@ -33,9 +33,9 @@ class House(object):
         elif water == 2:
             self.matrix = np.delete(self.matrix, 2, 0)
             self.matrix = np.delete(self.matrix, 2, 0)
-        else:
+        elif water == 3:
             self.matrix = np.delete(self.matrix, 3, 0)
-            
+        self.water_num = water   
         self.value = self.compute_value()
         
     def create_water_planes(self):
@@ -43,8 +43,7 @@ class House(object):
         new_matrix[4:, :] = self.matrix.copy()
         water_needed = GRID["height"] * GRID["width"] * 0.2
         # random water amount
-        random_water = 2
-        print(random_water)
+        random_water = random.randint(1,4)
         
         # 1 water body
         if random_water == 1:
@@ -64,19 +63,19 @@ class House(object):
         if random_water == 2:
             for i in range(random_water): 
                 if i==0:              
-                    width = np.random.uniform(low = GRID["width"]/4 , high = GRID["width"])
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
                     ratio = np.random.uniform(low = 0.25 , high = 4)
                     height = ratio * width
                     water_left = water_needed-width*height
                     while water_left<0:
-                        width = np.random.uniform(low = GRID["width"]/4 , high = GRID["width"])
-                        ratio = np.random.uniform(low = 0.1 , high = 4)
+                        width = np.random.uniform(low = 0 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
                         height = ratio * width
                         water_left = water_needed-width*height
                     new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                     new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
-                    new_matrix[i, 2] = new_matrix[0, 0] + width
-                    new_matrix[i, 3] = new_matrix[0, 1] - height
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
                     new_matrix[i, 4] = 4
                     new_matrix[i, 5] = random.randint(0,1)
                     new_matrix[i, 7] = height
@@ -87,8 +86,8 @@ class House(object):
                     height = ratio * width
                     new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                     new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
-                    new_matrix[i, 2] = new_matrix[0, 0] + width
-                    new_matrix[i, 3] = new_matrix[0, 1] - height
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
                     new_matrix[i, 4] = 4
                     new_matrix[i, 5] = random.randint(0,1)
                     new_matrix[i, 7] = height
@@ -100,8 +99,8 @@ class House(object):
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
-                        new_matrix[i, 2] = new_matrix[0, 0] + width
-                        new_matrix[i, 3] = new_matrix[0, 1] - height
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
                         new_matrix[i, 4] = 4
                         new_matrix[i, 5] = random.randint(0,1)
                         new_matrix[i, 7] = height
@@ -110,6 +109,220 @@ class House(object):
                         temp_mat[0:2,:] = new_matrix[0:2,:]
                         temp_mat[2:,:]= new_matrix[4:,:]
                         valid, distance = check_house(i, temp_mat)
+    
+        if random_water == 3:                
+            for i in range(random_water): 
+                if i==0:              
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    water_left = water_needed-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = 0 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
+                        height = ratio * width
+                        water_left = water_needed-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    
+                elif i == (random_water - 1):
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    width= math.sqrt(water_left/ratio)
+                    height = ratio * width
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
+                    temp_mat[0:3,:] = new_matrix[0:3,:]
+                    temp_mat[3:,:]= new_matrix[4:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
+                        temp_mat[0:3,:] = new_matrix[0:3,:]
+                        temp_mat[3:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+                        
+                else:
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    old_water = water_left
+                    water_left = water_left-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = 0 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
+                        height = ratio * width
+                        water_left = old_water-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
+                    temp_mat[0:2,:] = new_matrix[0:2,:]
+                    temp_mat[2:,:]= new_matrix[3:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
+                        temp_mat[0:2,:] = new_matrix[0:2,:]
+                        temp_mat[2:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+
+        if random_water == 4:                
+            for i in range(random_water): 
+                if i==0:              
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    water_left = water_needed-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = GRID["width"]/2 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
+                        height = ratio * width
+                        water_left = water_needed-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    
+                elif i == (random_water - 1):
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    width= math.sqrt(water_left/ratio)
+                    height = ratio * width
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 4, self.matrix.shape[1]))
+                    temp_mat[0:4,:] = new_matrix[0:4,:]
+                    temp_mat[4:,:]= new_matrix[4:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 4, self.matrix.shape[1]))
+                        temp_mat[0:4,:] = new_matrix[0:4,:]
+                        temp_mat[4:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+                        
+                elif i == (random_water - 3):
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    old_water = water_left
+                    water_left = water_left-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = 0 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
+                        height = ratio * width
+                        water_left = old_water-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
+                    temp_mat[0:2,:] = new_matrix[0:2,:]
+                    temp_mat[2:,:]= new_matrix[4:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
+                        temp_mat[0:2,:] = new_matrix[0:2,:]
+                        temp_mat[2:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+                        
+                else:
+                    width = np.random.uniform(low = 0 , high = GRID["width"])
+                    ratio = np.random.uniform(low = 0.25 , high = 4)
+                    height = ratio * width
+                    old_water = water_left
+                    water_left = water_left-width*height
+                    while water_left<0:
+                        width = np.random.uniform(low = 0 , high = GRID["width"])
+                        ratio = np.random.uniform(low = 0.25 , high = 4)
+                        height = ratio * width
+                        water_left = old_water-width*height
+                    new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                    new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                    new_matrix[i, 2] = new_matrix[i, 0] + width
+                    new_matrix[i, 3] = new_matrix[i, 1] - height
+                    new_matrix[i, 4] = 4
+                    new_matrix[i, 5] = random.randint(0,1)
+                    new_matrix[i, 7] = height
+                    new_matrix[i, 8] = width
+                    temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
+                    temp_mat[0:3,:] = new_matrix[0:3,:]
+                    temp_mat[3:,:]= new_matrix[4:,:]
+                    valid, distance = check_house(i, temp_mat)
+                    while valid == 1:
+                        new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
+                        new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
+                        new_matrix[i, 2] = new_matrix[i, 0] + width
+                        new_matrix[i, 3] = new_matrix[i, 1] - height
+                        new_matrix[i, 4] = 4
+                        new_matrix[i, 5] = random.randint(0,1)
+                        new_matrix[i, 7] = height
+                        new_matrix[i, 8] = width
+                        temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
+                        temp_mat[0:3,:] = new_matrix[0:3,:]
+                        temp_mat[3:,:]= new_matrix[4:,:]
+                        valid, distance = check_house(i, temp_mat)
+                        
         self.matrix = new_matrix
         return random_water
         
