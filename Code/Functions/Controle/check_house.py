@@ -13,12 +13,7 @@ from global_vars import DIST, DIST2, GRID
 # import necessary modules
 import numpy as np
 
-def check_house(house, house_mat, water_mat= None):
-    
-    # retrieve variables of the evaluated house
-    if water_mat is not None:
-        house_mat = np.concatenate((water_mat, house_mat))
-        house += len(water_mat)
+def check_house(house, house_mat, waternum):
     
     x1 = house_mat[house, 0]
     y1 = house_mat[house, 1]
@@ -96,13 +91,11 @@ def check_house(house, house_mat, water_mat= None):
     # check if the location of the tested house violates minimum distance rules
 #    print(all_cond)
     if all( all_cond.sum(0) == 1 ) and all( grid_cond == 1):
-        
-        if water_mat is not None:
-            all_cond = all_cond[4:,:]
+        all_cond = all_cond[waternum:,:]
     
         positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
-        distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )
+        distances = np.array( [0.0] * ( len(distance_ind) + 4) )
         
         # calculate the minimum distance of the house to other houses
         for i in range(len(distance_ind)):

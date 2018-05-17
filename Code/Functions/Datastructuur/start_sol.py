@@ -2,23 +2,23 @@
 This function generates a random position for a house, inserts its location
 into the provided matrix after checking if the location is viable and returns
 the matrix.
-
+ 
 Input:  matrix with all the types of houses, number of houses
 Output: matrix with the coordinates of random generated houses
 """
-
+ 
 # import variables
 from global_vars import GRID
-
+ 
 # import functions from other documents
 from check_house import check_house
 from draw_plan import Show_grid
-
+ 
 # import necessary modules
 import numpy as np
-
+ 
 show_grid = Show_grid()
-
+ 
 class Start_sol():
     def __init__(self, matrix, has_water = False):
         self.water_mat = None
@@ -29,7 +29,6 @@ class Start_sol():
             self.house_matrix = matrix[4:, :]
         else:
             self.house_matrix = matrix
-        
         self.total_houses = len(self.house_matrix)
         self.distance_mat = np.ones(shape = (self.total_houses + 4, self.total_houses + 4)) * 1000
         
@@ -51,7 +50,7 @@ class Start_sol():
                     self.distance_mat[i, -4:] = grid_distances
                     if i != 0:
                         distance = distance[:i]
-
+ 
                         self.distance_mat[i, :i] = distance
                         break
                 else:

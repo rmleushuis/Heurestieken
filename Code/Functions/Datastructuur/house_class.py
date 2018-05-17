@@ -21,10 +21,8 @@ class House(object):
         
         if create_water == True:
             water = self.create_water_planes()
-            
-        if create_houses == True:
-            self.matrix[( create_water * 4 ):,:] = Start_sol(self.matrix, create_water).fill_house_matrix()
-
+        self.water_num = water
+        
         # delete rows
         if water == 1:
             self.matrix = np.delete(self.matrix, 1, 0)
@@ -35,7 +33,14 @@ class House(object):
             self.matrix = np.delete(self.matrix, 2, 0)
         elif water == 3:
             self.matrix = np.delete(self.matrix, 3, 0)
-        self.water_num = water   
+        print('in init ', self.water_num )
+        
+        
+        if create_houses == True:
+            self.matrix[( create_water * water ):,:] = Start_sol(self.matrix, water).fill_house_matrix(water)
+
+
+        print('in init ', self.water_num )
         self.value = self.compute_value()
         
     def create_water_planes(self):
@@ -43,7 +48,7 @@ class House(object):
         new_matrix[4:, :] = self.matrix.copy()
         water_needed = GRID["height"] * GRID["width"] * 0.2
         # random water amount
-        random_water = random.randint(1,4)
+        random_water = 1
         
         # 1 water body
         if random_water == 1:
@@ -55,6 +60,7 @@ class House(object):
             new_matrix[0, 2] = new_matrix[0, 0] + width
             new_matrix[0, 3] = new_matrix[0, 1] - height
             new_matrix[0, 4] = 4
+            print('create water', random_water)
             new_matrix[0, 5] = random.randint(0,1)
             new_matrix[0, 7] = height
             new_matrix[0, 8] = width
@@ -95,7 +101,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
                     temp_mat[0:2,:] = new_matrix[0:2,:]
                     temp_mat[2:,:]= new_matrix[4:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -108,7 +114,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
                         temp_mat[0:2,:] = new_matrix[0:2,:]
                         temp_mat[2:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
     
         if random_water == 3:                
             for i in range(random_water): 
@@ -146,7 +152,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
                     temp_mat[0:3,:] = new_matrix[0:3,:]
                     temp_mat[3:,:]= new_matrix[4:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -159,7 +165,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
                         temp_mat[0:3,:] = new_matrix[0:3,:]
                         temp_mat[3:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
                         
                 else:
                     width = np.random.uniform(low = 0 , high = GRID["width"])
@@ -183,7 +189,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
                     temp_mat[0:2,:] = new_matrix[0:2,:]
                     temp_mat[2:,:]= new_matrix[3:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -196,7 +202,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
                         temp_mat[0:2,:] = new_matrix[0:2,:]
                         temp_mat[2:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
 
         if random_water == 4:                
             for i in range(random_water): 
@@ -234,7 +240,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 4, self.matrix.shape[1]))
                     temp_mat[0:4,:] = new_matrix[0:4,:]
                     temp_mat[4:,:]= new_matrix[4:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -247,7 +253,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 4, self.matrix.shape[1]))
                         temp_mat[0:4,:] = new_matrix[0:4,:]
                         temp_mat[4:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
                         
                 elif i == (random_water - 3):
                     width = np.random.uniform(low = 0 , high = GRID["width"])
@@ -271,7 +277,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
                     temp_mat[0:2,:] = new_matrix[0:2,:]
                     temp_mat[2:,:]= new_matrix[4:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -284,7 +290,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 2, self.matrix.shape[1]))
                         temp_mat[0:2,:] = new_matrix[0:2,:]
                         temp_mat[2:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
                         
                 else:
                     width = np.random.uniform(low = 0 , high = GRID["width"])
@@ -308,7 +314,7 @@ class House(object):
                     temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
                     temp_mat[0:3,:] = new_matrix[0:3,:]
                     temp_mat[3:,:]= new_matrix[4:,:]
-                    valid, distance = check_house(i, temp_mat)
+                    valid, distance = check_house(i, temp_mat, random_water)
                     while valid == 1:
                         new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                         new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
@@ -321,7 +327,7 @@ class House(object):
                         temp_mat = np.zeros(shape = (self.total_houses + 3, self.matrix.shape[1]))
                         temp_mat[0:3,:] = new_matrix[0:3,:]
                         temp_mat[3:,:]= new_matrix[4:,:]
-                        valid, distance = check_house(i, temp_mat)
+                        valid, distance = check_house(i, temp_mat, random_water)
                         
         self.matrix = new_matrix
         return random_water

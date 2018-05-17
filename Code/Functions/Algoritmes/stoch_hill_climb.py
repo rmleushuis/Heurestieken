@@ -81,7 +81,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
         matrix_improv = gen_improv(matrix_copy, house, magni, 1, houses.water_num)
         
         # calculate distance
-        valid, distance = check_house(house, matrix_improv)
+        valid, distance = check_house(house, matrix_improv ,houses.water_num)
         
         # if new position is valid
         if valid == 0 :
