@@ -70,7 +70,7 @@ mat = house.get_house_matrix()
 for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
  
-
+     
 # reset matrix to starting solution
 house.set_house_matrix(mat_copy)
      
