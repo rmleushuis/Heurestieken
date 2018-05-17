@@ -30,13 +30,14 @@ total_houses = 20
 random = []
 stoch = []
 ann = []
-
 # create the class for houses and generate random solution
 house = House(total_houses, True, True)
 
 
 # link the starting solution
-mat = house.get_house_matrix()
+mat = house.get_house_matrix().copy()
+house.set_house_matrix(mat)
+
 # store a copy of the starting solution
 mat_copy = house.get_house_matrix().copy()
 value = house.compute_value()

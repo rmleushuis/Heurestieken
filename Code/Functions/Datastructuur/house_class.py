@@ -163,4 +163,3 @@ class House(object):
         mat = self.matrix
         for k in range(len(mat)):
             show_grid.draw_house(mat[k, :], k)
- 
