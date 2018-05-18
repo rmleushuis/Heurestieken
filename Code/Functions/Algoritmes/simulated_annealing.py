@@ -11,6 +11,7 @@ Output: plan of the optimized house positions
 # import necessary modules
 import random
 import math
+import numpy as np
 
 # import functions from other documents
 from check_house import check_house
@@ -24,9 +25,30 @@ def sim_ann(houses, N, T0, TN, min_chance, magni, stop_improv, criteria):
     counter = 0
     
     while n < N and counter < stop_improv:
-        n += 1
-        mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
-        houses.compute_value()
+        if n == 0:
+            alpha = 4
+            beta = 4
+            eps = 4
+            magni = alpha + beta + eps
+            n += 1
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
+            old_value = houses.compute_value().copy()
+        else:
+            # function which account for the position of the step in the total number of steps
+            alpha = (N/n)**(1/2) * 50 * (20/houses.total_houses)
+            # function which account for past improvement
+            beta = improvement/old_value * 100
+            # random component to change possible direction
+            epsilon = np.random.uniform(low = 0 , high = 0.5*(alpha + beta))
+            # calculate total range
+            magni = 1/10 * (alpha + beta + epsilon)
+            if magni<0:
+                magni = - magni
+            else:
+                magni = magni
+            n += 1
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
+            houses.compute_value()
         if improvement < criteria:
             counter += 1
         else: 
