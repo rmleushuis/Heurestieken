@@ -48,14 +48,11 @@ show_grid = Show_grid()
 mat = house.get_house_matrix()
 for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
-
-
+ 
 # number of iterations the algorithm has to perform
-total_it =10
-# magnitude of maximal step in generate improvement
-magni = 10
+total_it = 10
 # max improvements which are allowed to be approximately the same
-max_same_improvement = 3
+max_same_improvement = 100
 # treshold value for which improvements are approximately the same
 same_improvement = 1
 
@@ -76,12 +73,11 @@ for k in range(len(mat[:,1])):
 house.set_house_matrix(mat_copy)
      
 # simulated annealing algorithm  parameters
-start_temp = 1000
-end_temp = 10
-acceptance_limit = 0.5
+start_temp = 800
+end_temp = 200
  
-mat = sim_ann(house, total_it, start_temp, end_temp, acceptance_limit,
-              magni, max_same_improvement, same_improvement)
+mat = sim_ann(house, total_it, start_temp, end_temp, 
+              max_same_improvement, same_improvement, 'lin')
  
 # print solution   
 print("sim annealing", house.compute_value())
@@ -98,8 +94,8 @@ house.set_house_matrix(mat_copy)
 # extra combi parameter; maximum number of times hill climbing can be applied
 max_times = 3
 
-mat = hill_ann_combi(house, total_it, start_temp, end_temp, acceptance_limit,
-              magni, max_same_improvement, same_improvement, max_times)
+mat = hill_ann_combi(house, total_it, start_temp, end_temp, max_same_improvement, 
+                     same_improvement, max_times)
 
 # print solution   
 print("combi", house.compute_value())
@@ -112,9 +108,9 @@ for k in range(len(mat[:,1])):
 
 # reset matrix to starting solution
 house.set_house_matrix(mat_copy)
-
-mat = min_max_alg(house, total_it, start_temp, end_temp, acceptance_limit, magni, 
-                  max_same_improvement, same_improvement, max_times, total_houses)
+magni = 10
+mat = min_max_alg(house, total_it, start_temp, end_temp, max_same_improvement, 
+                  same_improvement, max_times, total_houses, magni)
 
 # print solution   
 print("min max", house.compute_value())

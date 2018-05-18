@@ -16,26 +16,27 @@ import numpy as np
 # import functions from other documents
 from check_house import check_house
 from gen_improvement import gen_improv
+    
 
-def sim_ann(houses, N, T0, TN, min_chance, magni, stop_improv, criteria):
+def sim_ann(houses, N, T0, TN, max_same_improvement, criteria, tem_function):
     
     # count iterations
     n = 0
-    # count last stop_improv iterations
+    # count last max_same_improvement iterations
     counter = 0
     
-    while n < N and counter < stop_improv:
+    while n < N and counter < max_same_improvement:
         if n == 0:
             alpha = 4
             beta = 4
             eps = 4
             magni = alpha + beta + eps
             n += 1
-            mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, magni, tem_function)
             old_value = houses.compute_value().copy()
         else:
             # function which account for the position of the step in the total number of steps
-            alpha = (N/n)**(1/2) * 50 * (20/houses.total_houses)
+            alpha = (N/n)**(1/3) * 50 * (20/houses.total_houses)**2
             # function which account for past improvement
             beta = improvement/old_value * 100
             # random component to change possible direction
@@ -47,7 +48,7 @@ def sim_ann(houses, N, T0, TN, min_chance, magni, stop_improv, criteria):
             else:
                 magni = magni
             n += 1
-            mat, improvement = sim_ann_step(houses, n, N, T0, TN, min_chance, magni)
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, magni, tem_function)
             houses.compute_value()
         if improvement < criteria:
             counter += 1
@@ -57,21 +58,15 @@ def sim_ann(houses, N, T0, TN, min_chance, magni, stop_improv, criteria):
     return houses.get_house_matrix()
 
 
-def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
+def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
     
     # choose a random house to move
-    house = random.randint(0, houses.total_houses - 1)
+    house = random.randint(houses.water_num, houses.total_houses + houses.water_num - 1)
     
     # set up for while loop
     improvement = -1
     max_repeats = 4
     counter = 0
-    
-    # geef als parameter temperatuur afname structuur mee en kies hier dan juiste
-    # lin: curr_temp = T0 - n*(T0 - TN)/N
-    # exp: curr_temp = math.pow(T0*(TN/T0),(n/N))
-    # sigmoidal: curr_temp = TN + (T0-TN)/(1 + math.exp(0.3*n-N/2))
-    # geman: curr_temp = c/math.log(n) + d --> c en d?
     
     # calculate old value and store old matrix
     old_value = houses.compute_value().copy()
@@ -97,9 +92,9 @@ def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
             
             # check acceptance
             if improvement < 0:
-                curr_temp = math.pow(T0*(TN/T0),(n/N))
+                curr_temp = temp(T0, TN, n, N, tem_function)
                 improv_chance = math.exp(improvement/curr_temp)
-                if improv_chance > min_chance:
+                if improv_chance > np.random.uniform(low=0, high=1):
                     improvement = 10
         
         # check validity of new position and acceptance (not accepted if imp still neg)
@@ -113,3 +108,11 @@ def sim_ann_step(houses, n, N, T0, TN, min_chance, magni):
                 break
 
     return matrix_improv, improvement
+
+# different functions for the cooling scheme
+def temp(T0, TN, n, N, needed):
+    TEMP = {'lin': T0 - n*(T0 - TN)/N,
+           'exp': math.pow(T0*(TN/T0),(n/N)),
+           'sig': TN + (T0-TN)/(1 + math.exp(0.3*n-N/2)),
+           'geman': T0/(math.log(n) + 1)}
+    return TEMP[needed]
