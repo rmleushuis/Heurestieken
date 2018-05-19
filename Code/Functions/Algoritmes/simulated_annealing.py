@@ -112,7 +112,7 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
 # different functions for the cooling scheme
 def temp(T0, TN, n, N, needed):
     TEMP = {'lin': T0 - n*(T0 - TN)/N,
-           'exp': math.pow(T0*(TN/T0),(n/N)),
-           'sig': TN + (T0-TN)/(1 + math.exp(0.3*n-N/2)),
-           'geman': T0/(math.log(n) + 1)}
+           'exp': T0*math.pow((TN/T0),(n/N)),
+           'sig': TN + (T0-TN)/(1 + math.exp(0.3*(n-N/2))),
+           'geman': T0/(math.log(n + 1))}
     return TEMP[needed]
