@@ -36,7 +36,6 @@ house = House(total_houses, True, True)
 
 # link the starting solution
 mat = house.get_house_matrix().copy()
-house.set_house_matrix(mat)
 
 # store a copy of the starting solution
 mat_copy = house.get_house_matrix().copy()
@@ -70,7 +69,7 @@ for k in range(len(mat[:,1])):
  
      
 # reset matrix to starting solution
-house.set_house_matrix(mat_copy)
+house.set_house_distance(mat_copy)
      
 # simulated annealing algorithm  parameters
 start_temp = 800
@@ -89,7 +88,7 @@ for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
      
 # reset matrix to starting solution
-house.set_house_matrix(mat_copy)
+house.set_house_distance(mat_copy)
 
 # extra combi parameter; maximum number of times hill climbing can be applied
 max_times = 3
@@ -107,7 +106,7 @@ for k in range(len(mat[:,1])):
      show_grid.draw_house(mat[k, :], k)
 
 # reset matrix to starting solution
-house.set_house_matrix(mat_copy)
+house.set_house_distance(mat_copy)
 magni = 10
 mat = min_max_alg(house, total_it, start_temp, end_temp, max_same_improvement, 
                   same_improvement, max_times, total_houses, magni)

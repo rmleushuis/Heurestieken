@@ -41,7 +41,7 @@ class Show_grid():
         self.ax.set_ybound(0, GRID['height'])
         plt.gca().set_aspect('equal', adjustable='box')
         
-    def draw_house(self, new_house, index, numbers = False, types = None):
+    def draw_house(self, new_house, index, numbers = True, types = None):
         
         measures = {'lowerleft': (new_house[0], new_house[3]),
                     'width': new_house[2] - new_house[0],

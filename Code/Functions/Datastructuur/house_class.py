@@ -17,17 +17,25 @@ import math
 class House(object):
     def __init__(self, total_houses, create_water = False, create_houses = True):
         self.total_houses = total_houses
-        self.matrix = self.create_house_matrix()
+        self.water_num = 0
+        self.value = 0
         
+        self.matrix = None
+        
+        
+        #initiate matrix
+        self.create_house_matrix()
+        
+        # create water planes
         if create_water == True:
-            water = self.create_water_planes()
+            self.create_water_planes()
             
+        # create houses
         if create_houses == True:
-            self.matrix[( create_water * water ):,:] = Start_sol(self.matrix, water).fill_house_matrix()
-            
-        self.water_num = water   
-        self.value = self.compute_value()
-        
+            self.matrix = Start_sol(self.matrix, self.water_num).fill_house_matrix()
+            self.set_house_distance(self.matrix)
+            self.value = self.compute_value()
+             
     def create_water_planes(self):
         # random water amount
         random_water = random.randint(1,4)
@@ -81,7 +89,7 @@ class House(object):
     
                         
         self.matrix = new_matrix
-        return random_water
+        self.water_num = random_water
         
 
     def create_house_matrix(self):
@@ -101,11 +109,13 @@ class House(object):
             9) free space (minimum free space needed for the type house)
             10) price (price of the type house)
             11) interest (percentage received for each extra meter of free space)
-            12) extra-worth/m2 ratio
         """
+        
+        constants = ['height', 'width', 'free', 'price', 'interest']
+        constant_columns = range(7, 12)
 
         # create an empty matrix
-        matrix = np.zeros(shape = (self.total_houses, 13))
+        matrix = np.zeros(shape = (self.total_houses, 12))
         
         # generate the different types of houses with their characteristics
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
@@ -114,20 +124,18 @@ class House(object):
                                        ))
         # shuffle
         np.random.shuffle(matrix[:, 4])
-        matrix[:, 7] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['height']))(matrix[:, 4])
-        matrix[:, 8] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['width']))(matrix[:, 4])
-        matrix[:, 9] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['free']))(matrix[:, 4])
-        matrix[:, 10] = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['price']))(matrix[:, 4])
-        matrix[:, 11] = np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))]['interest']))(matrix[:, 4])
-        matrix[:, 12] = matrix[:, 11] * matrix[:, 10] / (matrix[:, 9] * matrix[:, 8] * 2 + matrix[:, 9] * matrix[:, 7] * 2)
-        return matrix
+        
+        for i, const in zip(constant_columns, constants):
+            matrix[:, i] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))][const]))(matrix[:, 4])
+            
+        self.matrix = matrix
     
     # request house matrix
     def get_house_matrix(self):
         return self.matrix
     
 #     change house matrix
-    def set_house_matrix(self, matrix):
+    def set_house_distance(self, matrix):
         # by changing houses the distances in column 6 also need to be recalculated
         distance_mat = np.ones(shape = (self.total_houses + 4 , self.total_houses + 4)) * 1000
         

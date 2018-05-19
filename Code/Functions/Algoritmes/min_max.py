@@ -24,11 +24,11 @@ def min_max_alg(houses, N, start_temp, end_temp, stop_improv, criteria, max_time
     # first minimize the score, wich is the difference between the optimum distance
     # and the current distance
     mat = min_score(houses, N, magni, stop_improv, criteria, tot_houses)
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     
     # then maximize the profit
     mat = hill_ann_combi(houses, N, start_temp, end_temp, stop_improv, criteria, max_times)
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     return houses.get_house_matrix()
 
 def min_score(houses, N, magni, stop_improv, criteria, tot_houses):    
@@ -46,7 +46,7 @@ def min_score(houses, N, magni, stop_improv, criteria, tot_houses):
             counter += 1
         else: 
             counter = 0    
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     return houses.get_house_matrix()
 
 
@@ -79,7 +79,7 @@ def min_score_step(houses, n, N, magni, tot_houses):
         # if new position is valid
         if valid == 0 :
             # calculate new value
-            houses.set_house_matrix(matrix_improv)
+            houses.set_house_distance(matrix_improv)
             new_score = 0
             for h in range(houses.water_num, tot_houses+houses.water_num):
                 new_dist = matrix_improv[h][6] - matrix_improv[h][9]
@@ -92,7 +92,7 @@ def min_score_step(houses, n, N, magni, tot_houses):
         # check validity of new position and improvement
         if valid == 1 or improvement < 0:
             counter += 1
-            houses.set_house_matrix(matrix_old)
+            houses.set_house_distance(matrix_old)
      
             # continue until max_repeats is reached
             if max_repeats == counter:

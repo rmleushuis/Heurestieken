@@ -54,7 +54,7 @@ def sim_ann(houses, N, T0, TN, max_same_improvement, criteria, tem_function):
             counter += 1
         else: 
             counter = 0    
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     return houses.get_house_matrix()
 
 
@@ -84,7 +84,7 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
         # if new position is valid
         if valid == 0 :
             # calculate new value
-            houses.set_house_matrix(matrix_improv)
+            houses.set_house_distance(matrix_improv)
             new_value = houses.compute_value()
             
             # calculate improvement
@@ -100,7 +100,7 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
         # check validity of new position and acceptance (not accepted if imp still neg)
         if valid == 1 or improvement < 0:
             counter += 1
-            houses.set_house_matrix(matrix_old)
+            houses.set_house_distance(matrix_old)
      
             # continue until max_repeats is reached
             if max_repeats == counter:

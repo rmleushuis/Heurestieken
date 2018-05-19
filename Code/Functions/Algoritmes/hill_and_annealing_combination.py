@@ -24,7 +24,7 @@ def hill_ann_combi(houses, total_it, start_temp, end_temp, max_same_improvement,
     while local_max == 0 and time < max_times:
         time += 1
         mat, local_max = stoch_steepest_hill(houses, total_it, max_same_improvement, same_improvement)
-        houses.set_house_matrix(mat)
+        houses.set_house_distance(mat)
         
     # save best solution
     best_map = houses.get_house_matrix().copy()
@@ -33,7 +33,7 @@ def hill_ann_combi(houses, total_it, start_temp, end_temp, max_same_improvement,
     # apply simulated annealing until max_times is reached
     for t in range(0, max_times):
         mat = sim_ann(houses, total_it, start_temp, end_temp, max_same_improvement, same_improvement, 'lin')
-        houses.set_house_matrix(mat)
+        houses.set_house_distance(mat)
         
         # save best solution
         current_value = houses.compute_value()
@@ -41,6 +41,6 @@ def hill_ann_combi(houses, total_it, start_temp, end_temp, max_same_improvement,
             best_map = houses.get_house_matrix().copy()
             best_value = current_value
         
-    houses.set_house_matrix(best_map)
+    houses.set_house_distance(best_map)
     return houses.get_house_matrix()
 

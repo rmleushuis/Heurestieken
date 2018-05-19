@@ -13,12 +13,7 @@ from global_vars import DIST, DIST2, GRID
 # import necessary modules
 import numpy as np
 
-def check_house(house, water_num, house_mat, water_mat= None):
-
-    # retrieve variables of the evaluated house
-    if water_mat is not None:
-        house_mat = np.concatenate((water_mat, house_mat))
-        house += len(water_mat)
+def check_house(house, water_num, house_mat, start = 0):
     
     x1 = house_mat[house, 0]
     y1 = house_mat[house, 1]
@@ -98,8 +93,12 @@ def check_house(house, water_num, house_mat, water_mat= None):
 #    print(all_cond)
     if all( all_cond.sum(0) == 1 ) and all( grid_cond == 1):
         
-        if water_mat is not None:
+        if start == 1:
+            return 0, None
+        
+        if water_num > 0:
             all_cond = all_cond[water_num:,:]
+            
         positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
         distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )

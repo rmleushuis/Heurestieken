@@ -56,7 +56,7 @@ def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
     if counter == stop_improv:
         local_max = 1
     
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     return houses.get_house_matrix(), local_max
 
 def stoch_steepest_hill_step(houses, magni, counter2):
@@ -86,7 +86,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
         # if new position is valid
         if valid == 0 :
             # calculate new value
-            houses.set_house_matrix(matrix_improv)
+            houses.set_house_distance(matrix_improv)
             new_value = houses.compute_value()   
             # calculate improvement
             improvement = new_value - old
@@ -95,7 +95,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
         # if new position is not valid or the improvement is negative
         if valid == 1 or improvement < 0:
             counter3 += 1
-            houses.set_house_matrix(matrix_old)
+            houses.set_house_distance(matrix_old)
             
             # continue until max_repeats is reached
             if max_repeats == counter3:

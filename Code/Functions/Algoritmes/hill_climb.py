@@ -39,13 +39,13 @@ def hill(houses, max_it, stop_improv, criteria):
                     improv_y = improv_y * (-1)**(i-1)
                     mat, improvement = steepest_hill_step(houses, counter2, improv_x, improv_y)
                     value.append(improvement.copy())
-                    houses.set_house_matrix(org_mat)
+                    houses.set_house_distance(org_mat)
                 else:
                     improv_x = improv_x * (-1)**i
                     improv_y = improv_y * (-1)**(i-1)
                     mat, improvement = steepest_hill_step(houses, counter2, improv_x, improv_y)
                     value.append(improvement.copy())
-                    houses.set_house_matrix(org_mat)
+                    houses.set_house_distance(org_mat)
                     
             max_pos = value.index(max(value))
             
@@ -73,13 +73,13 @@ def hill(houses, max_it, stop_improv, criteria):
                     improv_y = improv_y * (-1)**(i-1)
                     mat, improvement = steepest_hill_step(houses, counter2, improv_x, improv_y)
                     value.append(improvement.copy())
-                    houses.set_house_matrix(org_mat)
+                    houses.set_house_distance(org_mat)
                 else:
                     improv_x = improv_x * (-1)**i
                     improv_y = improv_y * (-1)**(i-1)
                     mat, improvement = steepest_hill_step(houses, counter2, improv_x, improv_y)
                     value.append(improvement.copy())
-                    houses.set_house_matrix(org_mat)
+                    houses.set_house_distance(org_mat)
                     
             max_pos = value.index(max(value))
             
@@ -104,7 +104,7 @@ def hill(houses, max_it, stop_improv, criteria):
     if counter == stop_improv:
         local_max = 1
     
-    houses.set_house_matrix(mat)
+    houses.set_house_distance(mat)
     return houses.get_house_matrix(), local_max
 
 def steepest_hill_step(houses, counter2,improv_x, improv_y):
@@ -134,7 +134,7 @@ def steepest_hill_step(houses, counter2,improv_x, improv_y):
         # if new position is valid
         if valid == 0 :
             # calculate new value
-            houses.set_house_matrix(matrix_improv)
+            houses.set_house_distance(matrix_improv)
             new_value = houses.compute_value()   
             # calculate improvement
             improvement = new_value - old
@@ -143,7 +143,7 @@ def steepest_hill_step(houses, counter2,improv_x, improv_y):
         # if new position is not valid or the improvement is negative
         if valid == 1 or improvement < 0:
             counter3 += 1
-            houses.set_house_matrix(matrix_old)
+            houses.set_house_distance(matrix_old)
             
             # continue until max_repeats is reached
             if max_repeats == counter3:
