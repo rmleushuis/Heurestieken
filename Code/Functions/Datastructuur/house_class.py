@@ -1,6 +1,6 @@
 # import global vars
 from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID
-from global_vars import HOUSE_CHARS
+from global_vars import HOUSE_CHARS, DIST2, DIST, GRID
 
 # import start solution class
 from start_sol import Start_sol
@@ -112,17 +112,18 @@ class House(object):
         """
         
         constants = ['height', 'width', 'free', 'price', 'interest']
-        constant_columns = range(7, 12)
+        columns = 12
+        constant_columns = range(7, columns)
 
         # create an empty matrix
-        matrix = np.zeros(shape = (self.total_houses, 12))
+        matrix = np.zeros(shape = (self.total_houses, columns))
         
         # generate the different types of houses with their characteristics
         matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
                                        np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
                                        np.repeat(3, np.round(PERC_VIL * self.total_houses)),
                                        ))
-        # shuffle
+        # shuffle houses
         np.random.shuffle(matrix[:, 4])
         
         for i, const in zip(constant_columns, constants):
@@ -137,23 +138,12 @@ class House(object):
 #     change house matrix
     def set_house_distance(self, matrix):
         # by changing houses the distances in column 6 also need to be recalculated
-        distance_mat = np.ones(shape = (self.total_houses + 4 , self.total_houses + 4)) * 1000
-        
-        try:
-            for i in range(self.water_num,len(matrix[:,6])):
-                valid, distance  = check_house(i,self.water_num, matrix)
-                grid_distances = distance[-4:]
-                distance = distance[:-4]
-                distance_mat[i, :i] = distance 
-                distance_mat[i, -4:] = grid_distances
-            i_upper = np.triu_indices(self.total_houses, 1)
-            distance_mat[i_upper] = distance_mat.transpose()[i_upper]
-            distance_mat[-4:,:] = distance_mat[:,-4:].transpose()
-            matrix[self.water_num:, 6] = np.min(distance_mat, axis = 0)[:-4]
-        except:
-            for i in range(self.water_num,len(matrix[:,6])):
-                matrix[i, 6]=-100
-        
+        distancess = []
+        for j in range(self.water_num, len(matrix)):
+            valid, new_dist = self.distancesf(j, matrix)
+            
+            distancess.append(new_dist)      
+        matrix[self.water_num:, 6] = distancess
         # change the matrix with the new distances
         self.matrix = matrix
          
@@ -162,12 +152,132 @@ class House(object):
         
         # calculate the total value of the grid
         self.value = sum(matrix[:, 10] + matrix[:, 10] * matrix[:, 6] * matrix[:, 11])
+        
         return self.value 
     
     def show_house_grid(self):
         
-        # draw the stochastic hill climbing solution
         show_grid = Show_grid()
         mat = self.matrix
-        for k in range(len(mat)):
-            show_grid.draw_house(mat[k, :], k)
+        
+        for it in range(self.total_houses + self.water_num):
+            show_grid.draw_house(mat[it, :], it)
+
+    def distancesf(self, loc, matrix):
+        matrix = matrix.copy()
+        
+        # obligated free space of the current house
+        free_space_cur = matrix[loc, 9]
+        
+        # positions
+        x1 = matrix[loc, 0]
+        y1 = matrix[loc, 1]
+        x2 = matrix[loc, 2]
+        y2 = matrix[loc, 3]
+        
+        temp = np.delete(matrix, loc, 0)
+        
+        # obligated free space of all other houses
+        house_free_space = temp[:, 9]
+        
+        # retrieve the positions of all sides of each house
+        right_side = temp[:, 2] 
+        left_side = temp[:, 0]
+        top_side = temp[:, 1] 
+        bottom_side = temp[:, 3]
+        
+        # combine the free space of all the houses
+        free_space = np.ones((len(house_free_space), 2)) * free_space_cur
+        free_space[:, 0] = house_free_space
+        
+        # allow houses to be placed directly to the water
+        free_space[:self.water_num, 1] = 0.0
+        
+        # find the maximum obligated free space
+        free_space = np.max(free_space, 1)
+    
+        first_condition = np.logical_and( x1 >= (right_side + free_space) ,
+                                          np.logical_or.reduce(( np.logical_and( y1 <= top_side,
+                                          y1 >= bottom_side ), np.logical_and( y2 <= top_side,
+                                          y2 >= bottom_side ), np.logical_and(y2 <= bottom_side, y1 >= top_side),
+                                            np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+        second_condition = np.logical_and( x1 > (right_side + free_space),
+                                           y1 < (bottom_side - free_space) )
+        third_condition = np.logical_and( y1 <= (bottom_side - free_space),
+                                          np.logical_or.reduce(( np.logical_and( x1 <= right_side,
+                                          x1 >= left_side ), np.logical_and( x2 <= right_side,
+                                          x2 >= left_side ), np.logical_and(x1 <= left_side, x2 >= right_side),
+                                            np.logical_and( x1 >= left_side, x2 <= right_side))))
+        fourth_condition = np.logical_and( y1 < (bottom_side - free_space),
+                                          x2 < (left_side - free_space) )
+           
+        fifth_condition = np.logical_and( x2 <= (left_side - free_space),
+                                          np.logical_or.reduce(( np.logical_and( y1 <= top_side,
+                                          y1 >= bottom_side ), np.logical_and( y2 <= top_side,
+                                          y2 >= bottom_side ), np.logical_and( y2 <= bottom_side, y1 >= top_side),
+                                            np.logical_and( y2 >= bottom_side, y1 <= top_side))))
+        sixth_condition = np.logical_and( x2 < (left_side - free_space),
+                                          y2 > (top_side + free_space) )
+        seventh_condition = np.logical_and( y2 >= (top_side +  free_space),
+                                            np.logical_or.reduce(( np.logical_and( x1 <= right_side,
+                                            x1 >= left_side ), np.logical_and( x2 <= right_side,
+                                            x2 >= left_side ), np.logical_and( x1 <= left_side, x2 >= right_side),
+                                            np.logical_and( x1 >= left_side, x2 <= right_side))))
+        eigth_condition = np.logical_and( y2 > (top_side + free_space),
+                                          x1 > (right_side + free_space) )
+        
+        # create a matrix of all conditions
+        all_cond = np.array([first_condition, second_condition, third_condition,
+                             fourth_condition, fifth_condition, sixth_condition,
+                             seventh_condition, eigth_condition])    
+        
+        ninth_condition = x1 >= free_space_cur
+        tenth_condition = x2 <= (GRID['width'] - free_space_cur)
+        eleventh_condition = y1 <= (GRID['height'] - free_space_cur)
+        twelfth_condition = y2 >= free_space_cur
+    
+        grid_cond = np.array([ninth_condition, tenth_condition, eleventh_condition,
+                          twelfth_condition])
+
+        
+        # check whether all conditions are satisfied
+        if all( all_cond.sum(0) == 1 ) and all( grid_cond == 1):
+            
+            # remove water (because they have no influence on
+            # the minimal distance)
+            all_cond = all_cond[:, self.water_num:]
+            temp = temp[self.water_num:]
+            
+            positions = np.array([x1, y1, x2, y2])    
+            
+            # initaite a empty vector of distances to all other houses
+            distance_ind = np.argmax(all_cond, axis = 0)
+            distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )
+            
+            # calculate the minimum distance of the house to other houses
+            positions = np.array([x1, y1, x2, y2])
+            
+            # iterate over all other houses and find its distance
+            for i in range(len(temp)):
+                plane = distance_ind[i]
+                
+                # 2d vector of the differences in x and y position
+                m = np.abs(positions[DIST2[str(plane)]] - temp[i, DIST[str(plane)]]) 
+
+                # use the corresponding distance measure
+                if plane % 2 == 0:
+                    distances[i] = np.abs(m) - free_space_cur
+                else:
+                    distances[i] = np.sqrt(np.dot(m, m)) - free_space_cur
+            
+            # calculate grid distances
+            distances[-1] = y2 - free_space_cur
+            distances[-2] = (GRID['height'] - free_space_cur) - y1
+            distances[-3] = (GRID['width'] - free_space_cur) - x2
+            distances[-4] = x1 - free_space_cur
+
+            # return valid and the minimal distance
+            return 0, np.min(distances)
+        
+        # if conditions are not satisfied return not valid
+        return 1, None

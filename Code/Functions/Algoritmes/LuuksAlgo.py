@@ -15,7 +15,7 @@ show_unused_spaces(mat)
 print(old_value)
 total_start = time.time()
 
-for loc in range(len(mat3)):
+for loc in range(1, len(mat3)):
     print(loc)    
     start = time.time()
     rotate = 0    
@@ -33,7 +33,7 @@ for loc in range(len(mat3)):
             
             if valid == 0:
                 distancess = []
-                for j in range(len(mat2)):
+                for j in range(1, len(mat2)):
                     valid, new_dist = distancesf(j, mat2)
                     
                     distancess.append(new_dist)                    
@@ -41,7 +41,7 @@ for loc in range(len(mat3)):
 #                    distancess = np.array(distancess)
 #                    distancess = distancess.max(0)
                 
-                mat2[:, 6] = distancess
+                mat2[1:, 6] = distancess
                 value_new = sum(mat2[:, 10] + mat2[:, 10] * mat2[:, 6] * mat2[:, 11])
                 
                 if value_new > old_value:
@@ -143,14 +143,19 @@ def distancesf(loc, matrix):
     
 #    print(all_cond)
     if all( all_cond.sum(0) == 1 ):
-         
+#        print(all_cond.shape)
+        
+        all_cond = all_cond[:, 1:]
+        
+        temp = temp[1:]
+        
         positions = np.array([x1, y1, x2, y2])    
         distance_ind = np.argmax(all_cond, axis = 0)
         distances = np.array( [0.0] * ( len(distance_ind) + 4 ) )
         
         # calculate the minimum distance of the house to other houses
         positions = np.array([x1, y1, x2, y2])
-      
+        
         for i in range(len(temp)):
             plane = distance_ind[i]
         #            print(plane)
@@ -174,9 +179,11 @@ def distancesf(loc, matrix):
         
 #        selector = [x for x in range(len(matrix)) if x != loc]
 #        matrix[selector, 6] = temp[:,6]
-#        
+#
+#        print(distances)
         return 0, np.min(distances)
     return 1, None
+
 
 #
 #istance_mat = np.ones(shape = (len(mat2) + 4, len(mat2) + 4)) * 1000
