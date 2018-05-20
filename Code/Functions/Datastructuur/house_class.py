@@ -141,8 +141,7 @@ class House(object):
         distancess = []
         for j in range(self.water_num, len(matrix)):
             valid, new_dist = self.distancesf(j, matrix)
-            
-            distancess.append(new_dist)      
+            distancess.append(new_dist)
         matrix[self.water_num:, 6] = distancess
         # change the matrix with the new distances
         self.matrix = matrix
@@ -280,4 +279,4 @@ class House(object):
             return 0, np.min(distances)
         
         # if conditions are not satisfied return not valid
-        return 1, None
+        return 1, 0
