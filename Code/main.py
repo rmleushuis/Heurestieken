@@ -73,10 +73,11 @@ house.set_house_distance(mat_copy)
      
 # simulated annealing algorithm  parameters
 start_temp = 800
-end_temp = 200
+end_temp = 0.01
+method = 'exp'
  
 mat = sim_ann(house, total_it, start_temp, end_temp, 
-              max_same_improvement, same_improvement, 'lin')
+              max_same_improvement, same_improvement, method)
  
 # print solution   
 print("sim annealing", house.compute_value())
@@ -94,7 +95,7 @@ house.set_house_distance(mat_copy)
 max_times = 3
 
 mat = hill_ann_combi(house, total_it, start_temp, end_temp, max_same_improvement, 
-                     same_improvement, max_times)
+                     same_improvement, max_times, method)
 
 # print solution   
 print("combi", house.compute_value())
@@ -109,7 +110,7 @@ for k in range(len(mat[:,1])):
 house.set_house_distance(mat_copy)
 magni = 10
 mat = min_max_alg(house, total_it, start_temp, end_temp, max_same_improvement, 
-                  same_improvement, max_times, total_houses, magni)
+                  same_improvement, max_times, total_houses, magni, method)
 
 # print solution   
 print("min max", house.compute_value())

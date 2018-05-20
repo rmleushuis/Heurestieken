@@ -19,7 +19,7 @@ OPTIMUM = {'20': {'1': 7, '2': 23, '3': 63},
            '40': {'1': 3, '2': 13, '3': 39},
            '60': {'1': 0.5, '2': 8, '3': 29}}
 
-def min_max_alg(houses, N, start_temp, end_temp, stop_improv, criteria, max_times, tot_houses, magni):
+def min_max_alg(houses, N, start_temp, end_temp, stop_improv, criteria, max_times, tot_houses, magni, method):
     
     # first minimize the score, wich is the difference between the optimum distance
     # and the current distance
@@ -27,7 +27,7 @@ def min_max_alg(houses, N, start_temp, end_temp, stop_improv, criteria, max_time
     houses.set_house_distance(mat)
     
     # then maximize the profit
-    mat = hill_ann_combi(houses, N, start_temp, end_temp, stop_improv, criteria, max_times)
+    mat = hill_ann_combi(houses, N, start_temp, end_temp, stop_improv, criteria, max_times, method)
     houses.set_house_distance(mat)
     return houses.get_house_matrix()
 
