@@ -27,7 +27,7 @@ from min_max import min_max_alg
 total_houses = 20
 
 # number of iterations an algorithm has to perform
-total_it = 1
+total_it = 50
 
 # max number of improvements which are allowed to be approximately the same
 max_same_improvement = 5
