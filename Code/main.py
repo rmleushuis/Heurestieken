@@ -1,3 +1,8 @@
+"""
+This file runs all the different algorithms and prints the value and the map of
+each solution.
+"""
+
 # import necessary modules
 import os, sys
  
@@ -11,113 +16,78 @@ sys.path.append(os.path.join(directory, "functions/visualisatie"))
  
 # import class
 from house_class import House
-from draw_plan import Show_grid
  
 # import algorithms
 from stoch_hill_climb import stoch_steepest_hill
 from simulated_annealing import sim_ann
 from hill_and_annealing_combination import hill_ann_combi
 from min_max import min_max_alg
-from hill_climb import hill
  
-# define the 3 versions of the problem
-total_houses = [20, 40, 60]
- 
-# select a version of the problem
+# chose the number of houses: 20, 40 or 60
 total_houses = 20
- 
-# make lists to store the solutions in
-random = []
-stoch = []
-ann = []
-# create the class for houses and generate random solution
-house = House(total_houses, True, True)
 
+# number of iterations an algorithm has to perform
+total_it = 1
 
-# link the starting solution
-mat = house.get_house_matrix().copy()
+# max number of improvements which are allowed to be approximately the same
+max_same_improvement = 5
 
-# store a copy of the starting solution
-mat_copy = house.get_house_matrix().copy()
-value = house.compute_value()
-print("random", value)
-random.append(value)
-
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(len(mat[:,1])):
-     show_grid.draw_house(mat[k, :], k)
- 
-# number of iterations the algorithm has to perform
-total_it = 10
-# max improvements which are allowed to be approximately the same
-max_same_improvement = 100
 # treshold value for which improvements are approximately the same
 same_improvement = 1
 
-# stochastic hill climbing algorithm
-mat, local_max = stoch_steepest_hill(house, total_it, max_same_improvement, same_improvement)
- 
-# print solution
-print("stoch hill", house.compute_value())
- 
-# draw the stochastic hill climbing solution
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(len(mat[:,1])):
-     show_grid.draw_house(mat[k, :], k)
- 
-     
-# reset matrix to starting solution
-house.set_house_distance(mat_copy)
-     
-# simulated annealing algorithm  parameters
+# simulated annealing algorithm parameters
 start_temp = 800
 end_temp = 0.01
 method = 'exp'
  
+# extra parameter for combi; maximum number of times hill climbing can be applied
+# and the number of times simulated annealing will be applied
+max_times = 3
+
+# extra parameter for min max; the range to choose a step from in the minimizing stage
+magni = 10
+ 
+
+# create the class for houses and generate random solution
+house = House(total_houses, True, True)
+
+# print the value and the map from the random solution
+print("random", house.compute_value())
+house.show_house_grid()
+
+# save the random allocation as the starting solution
+mat_copy =  house.get_house_matrix().copy()
+
+# stochastic hill climbing algorithm
+mat, local_max = stoch_steepest_hill(house, total_it, max_same_improvement, same_improvement)
+print("stoch hill", house.compute_value())
+house.show_house_grid()
+ 
+     
+# reset matrix to starting solution
+house.set_house_distance(mat_copy)
+     
+# simulated annealing algrotihm
 mat = sim_ann(house, total_it, start_temp, end_temp, 
               max_same_improvement, same_improvement, method)
- 
-# print solution   
 print("sim annealing", house.compute_value())
- 
-# draw the simulated annealing algorithm solution
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(len(mat[:,1])):
-     show_grid.draw_house(mat[k, :], k)
+house.show_house_grid()
      
 # reset matrix to starting solution
 house.set_house_distance(mat_copy)
 
-# extra combi parameter; maximum number of times hill climbing can be applied
-max_times = 3
-
+# combi algorithm
 mat = hill_ann_combi(house, total_it, start_temp, end_temp, max_same_improvement, 
-                     same_improvement, max_times, method)
-
-# print solution   
+                     same_improvement, max_times, method)  
 print("combi", house.compute_value())
- 
-# draw the simulated annealing algorithm solution
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(len(mat[:,1])):
-     show_grid.draw_house(mat[k, :], k)
+house.show_house_grid()
 
 # reset matrix to starting solution
 house.set_house_distance(mat_copy)
-magni = 10
+
+# min max algorithm
 mat = min_max_alg(house, total_it, start_temp, end_temp, max_same_improvement, 
                   same_improvement, max_times, total_houses, magni, method)
-
-# print solution   
 print("min max", house.compute_value())
- 
-# draw the simulated annealing algorithm solution
-show_grid = Show_grid()
-mat = house.get_house_matrix()
-for k in range(len(mat[:,1])):
-     show_grid.draw_house(mat[k, :], k)
+house.show_house_grid()
 
