@@ -44,3 +44,15 @@ DIST2 = {'0': 0 ,
 
 # all types of algorithms
 ALGOS = ["stoch", "sim", "combi", "minmax", "all"]
+
+# starting stap size
+STARTING_STEP_SIZE = 12 
+
+# maximum number of attempts to find improvement allowed
+MAX_REPEATS_STOCH = 4
+
+# python function depth limit
+PYTHON_DEPTH = 21
+
+
+

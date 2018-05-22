@@ -1,8 +1,9 @@
 """
 This function uses a stochastic hill climbing algorithm to find a local maxima.
  
-Input:  class containing the matrix and magnitude of max change
-Output: plan of the optimized house positions and a binary variable for local maximum
+Input:  Class containing the matrix and magnitude of max change
+Output: Plan of the optimized house positions and a binary variable for the 
+        local maximum.
 """
 # import necessary modules
 import random
@@ -12,6 +13,8 @@ import numpy as np
 from check_house import check_house
 from gen_improvement import gen_improv
 
+# import global variables
+from global_vars import STARTING_STEP_SIZE, MAX_REPEATS_STOCH, PYTHON_DEPTH
 
 def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
     
@@ -26,24 +29,18 @@ def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
     
     while n < max_it and counter < stop_improv:
         if n == 0:
-            alpha = 4
-            beta = 4
-            eps = 4
-            magni = alpha + beta + eps
-            mat, improvement = stoch_steepest_hill_step(houses, magni, counter2)
+            magni = STARTING_STEP_SIZE
+            mat, improvement = stoch_steepest_hill_step(houses, magni,
+                        counter2)
             old_value = houses.compute_value().copy()
         else:
-            # function which account for the position of the step in the total number of steps
-            alpha = (max_it/n)**(1/3) * 50 * (20/houses.total_houses)**3
-            # function which account for past improvement
-            beta = improvement/old_value * 100
-            # random component to change possible direction
-            epsilon = np.random.uniform(low = 0 , high = 0.5*(alpha + beta))
-            # calculate total range
-            magni = 1/10 * (alpha + beta + epsilon)
-
-
-            mat, improvement = stoch_steepest_hill_step(houses, magni, counter2)
+            # calculate variable step size as a function of momentum and
+            # decaying learning rate and trend breaker termr
+            magni = determine_stepsize(max_it, houses, old_value, n,
+                improvement)
+            # calculate new improvement 
+            mat, improvement = stoch_steepest_hill_step(houses, magni,
+                        counter2)
             old_value = houses.compute_value().copy()
         n += 1
         houses.compute_value()
@@ -57,6 +54,7 @@ def stoch_steepest_hill(houses, max_it, stop_improv, criteria):
         local_max = 1
     
     houses.set_house_distance(mat)
+    
     return houses.get_house_matrix(), local_max
 
 def stoch_steepest_hill_step(houses, magni, counter2):
@@ -66,8 +64,6 @@ def stoch_steepest_hill_step(houses, magni, counter2):
     
     # set up for while loop
     improvement = -1
-    new_value  = 'nan'
-    max_repeats = 4
     counter3 = 0
     
     # calculate  old value and store old matrix
@@ -78,7 +74,8 @@ def stoch_steepest_hill_step(houses, magni, counter2):
 
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni, 1, houses.water_num)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 1,
+                houses.water_num)
     
         # calculate distance
         valid, distance = check_house(house, houses.water_num , matrix_improv)
@@ -98,13 +95,28 @@ def stoch_steepest_hill_step(houses, magni, counter2):
             houses.set_house_distance(matrix_old)
             
             # continue until max_repeats is reached
-            if max_repeats == counter3:
+            if MAX_REPEATS_STOCH == counter3:
                 counter2 += 1
                 matrix_improv = matrix_old
-                if counter2 < 21:
-                    matrix_improv, improvement = stoch_steepest_hill_step(houses,magni, counter2)
+                if counter2 < PYTHON_DEPTH:
+                    matrix_improv, improvement = stoch_steepest_hill_step(
+                            houses,magni, counter2)
                 else:
                     continue
                 break
 
     return matrix_improv, improvement
+
+def determine_stepsize(max_it, houses, old_value, n , improvement):
+    
+    # function which account for the position of the step in the total 
+    # number of steps
+    alpha = (max_it/n)**(1/3) * 50 * (20/houses.total_houses)**3
+    # function which account for past improvement
+    beta = improvement/old_value * 100
+    # random component to change trend direction
+    epsilon = np.random.uniform(low = 0 , high = 0.5 * (alpha + beta))
+    # calculate total range
+    step_size = 0.1 * (alpha + beta + epsilon) 
+    
+    return step_size
