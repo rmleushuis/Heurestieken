@@ -95,7 +95,7 @@ def stoch_steepest_hill_step(houses, magni, counter2):
             houses.set_house_distance(matrix_old)
             
             # continue until max_repeats is reached
-            if MAX_REPEATS_STOCH == counter3:
+            if counter3 == MAX_REPEATS_STOCH:
                 counter2 += 1
                 matrix_improv = matrix_old
                 if counter2 < PYTHON_DEPTH:
