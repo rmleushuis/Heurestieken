@@ -22,8 +22,8 @@ import math
 
 class House(object):
     
-    """ This function initializes the class."""
     def __init__(self, total_houses, create_water = False, create_houses = True):
+        """ This function initializes the class."""
         self.total_houses = total_houses
         self.water_num = 0
         self.value = 0
@@ -101,7 +101,7 @@ class House(object):
             valid, distance = check_house(i, random_water, new_matrix)
             
             # if invalid generate new position
-            while valid == 1:
+            while check_house(i, random_water, new_matrix)[0]:
                 new_matrix[i, 0] = np.random.uniform(low = 0 , high = GRID["width"]-width)
                 new_matrix[i, 1] = np.random.uniform(low = height, high = GRID["height"])
                 new_matrix[i, 2] = new_matrix[i, 0] + width
@@ -146,9 +146,11 @@ class House(object):
         matrix = np.zeros(shape = (self.total_houses, columns))
         
         # generate the different types of houses with their characteristics
-        matrix[:, 4] = np.concatenate((np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
-                                       np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
-                                       np.repeat(3, np.round(PERC_VIL * self.total_houses)),))
+        matrix[:, 4] = np.concatenate((
+                np.repeat(1, np.round(PERC_SOLO * self.total_houses)), 
+                np.repeat(2, np.round(PERC_BUNG * self.total_houses)),
+                np.repeat(3, np.round(PERC_VIL * self.total_houses)),
+                ))
         
         # shuffle houses in order to avoid bias in starting solutions
         np.random.shuffle(matrix[:, 4])

@@ -27,7 +27,7 @@ from min_max import min_max_alg
 total_houses = 20
 
 # number of iterations an algorithm has to perform
-total_it = 50
+total_it = 1
 
 # max number of improvements which are allowed to be approximately the same
 max_same_improvement = 5
@@ -90,4 +90,3 @@ mat = min_max_alg(house, total_it, start_temp, end_temp, max_same_improvement,
                   same_improvement, max_times, total_houses, magni, method)
 print("min max", house.compute_value())
 house.show_house_grid()
-
