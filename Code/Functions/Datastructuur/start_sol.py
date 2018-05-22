@@ -13,6 +13,7 @@ from global_vars import GRID
 # import functions from other documents
 from check_house import check_house
 from draw_plan import Show_grid
+import time
 
 # import necessary modules
 import numpy as np
@@ -30,7 +31,7 @@ class Start_sol():
         total_houses = self.total_houses + self.water_num
         house_matrix = self.house_matrix
         max_repeats = 40000
-
+        start = time.time()
         i = self.water_num
         
         while i < total_houses:
@@ -42,7 +43,11 @@ class Start_sol():
                     break
                 else:
                     counter += 1
-                    if max_repeats == counter:
+                    if (time.time() - start) > 20:
+                        start = time.time()
+                        i = 0
+                        print('start again')
+                    if max_repeats is counter:
                         i -= 10
                         break
                     continue
