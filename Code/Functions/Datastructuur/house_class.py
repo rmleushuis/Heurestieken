@@ -372,7 +372,7 @@ class House(object):
         matrix = matrix.copy()
         
         # obligated free space of the current house
-        free_space_cur = matrix[loc, self.column_defs['distance']]
+        free_space_cur = matrix[loc, self.column_defs['free']]
         
         positions_ = {'x1': matrix[loc, self.column_defs['x1']],
                      'y1': matrix[loc, self.column_defs['y1']],
@@ -416,9 +416,9 @@ class House(object):
         
         # create a matrix of all 4 grid conditions to test them all at once
         grid_cond = self.grid_conditions(positions_, free_space_cur)
-        
+
         # check whether all conditions are satisfied
-        if all(all_conditions.sum(0) == True) and all(grid_cond == True):
+        if all(all_conditions.sum(0)) and all(grid_cond):
             
             if start:
                 return 1
@@ -451,14 +451,13 @@ class House(object):
             
             # calculate grid distances
             
-            
             distances[self.grid_index['bottom']] = positions_['y2'] - free_space_cur
-            distances[self.grid_index['right']] = self.grid_height - (free_space_cur + positions_['x2'])
-            distances[self.grid_index['top']] = self.grid_width - (free_space_cur + positions_['y1'])
+            distances[self.grid_index['right']] = self.grid_width- (free_space_cur + positions_['x2'])
+            distances[self.grid_index['top']] = self.grid_height - (free_space_cur + positions_['y1'])
             distances[self.grid_index['left']] = positions_['x1'] - free_space_cur
-
             # return valid and the minimal distance
+#            print(distances)
             return np.min(distances)
         
         # if conditions are not satisfied return not valid
-        return None
+        return 0
