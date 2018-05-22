@@ -41,3 +41,6 @@ DIST2 = {'0': 0 ,
      '5': [2, 3],
      '6': 3,
      '7': [0, 3]}
+
+# all types of algorithms
+ALGOS = ["stoch", "sim", "combi", "minmax", "all"]
