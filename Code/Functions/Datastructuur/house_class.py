@@ -12,9 +12,6 @@ from global_vars import HOUSE_CHARS, DIST2, DIST, MAX_WATERS
 from start_sol import Start_sol
 from draw_plan import Show_grid
 
-# import necessary functions
-from check_house import check_house
-
 # import necessary modules
 import numpy as np
 import random
@@ -22,7 +19,8 @@ import math
 
 class House(object):
     
-    def __init__(self, total_houses, create_water = False, create_houses = True, verbose = False):
+    def __init__(self, total_houses, create_water = False,
+                 create_houses = True, verbose = False):
         """
         The house matrix consists of the following columns:
            variables: 
@@ -38,7 +36,7 @@ class House(object):
             8) width  (grid width of the house)
             9) free space (minimum free space needed for the type house)
             10) price (price of the type house)
-            11) interest (percentage received for each extra meter of free space)
+            11) interest (percentage received for each extra meters free space)
         """
         """ This function initializes the class."""
         
@@ -65,8 +63,8 @@ class House(object):
                       'upper': self.upper,
                       'upper_right': self.upper_right
                       }
-        
-        self.constant_columns = ['height', 'width', 'free', 'price', 'interest']
+        self.constant_columns = ['height', 'width', 'free', 'price',
+                                 'interest']
         self.column_defs = {'x1': 0,
                        'y1': 1,
                        'x2': 2,

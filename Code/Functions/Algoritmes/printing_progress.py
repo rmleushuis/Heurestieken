@@ -1,5 +1,5 @@
 """
-This file handles printing of the progress.
+This file handles the printing of the progress.
  
 Input:
     n: current iteration

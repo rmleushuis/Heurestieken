@@ -1,6 +1,6 @@
 """
-This function first tries to go to the optimum distance values. Then it tries
-to maximize the profit.
+This file contains a function which first tries to find the optimum distance 
+values. The next function in the file tries to maximize the profit.
  
 Input:
     houses: the house class (containing the matrix)
@@ -30,10 +30,8 @@ from check_house import check_house
 from gen_improvement import gen_improv
 from hill_and_annealing_combination import hill_ann_combi
 
-# optimum values from upper bound (number of houses, kind : optimum)
-OPTIMUM = {'20': {'1': 7, '2': 23, '3': 63},
-           '40': {'1': 3, '2': 13, '3': 39},
-           '60': {'1': 0.5, '2': 8, '3': 29}}
+# import global variables
+from global_vars import OPTIMUM
 
 def min_max_alg(houses, N, start_temp, end_temp, stop_improv, criteria, 
                 max_times, tot_houses, magni, method):
@@ -128,12 +126,12 @@ def min_score_step(houses, n, N, magni, tot_houses):
             new_score = 0
             for h in range(houses.water_num, tot_houses+houses.water_num):
                 new_dist = matrix_improv[h][6] - matrix_improv[h][9]
-                new_score += abs(OPTIMUM[str(tot_houses)][str(int(matrix_improv[h][4]))] - new_dist)
+                new_score += abs(OPTIMUM[str(tot_houses)]
+                                [str(int(matrix_improv[h][4]))] - new_dist)
 
             # calculate improvement (thus new score has to be lower)
             improvement = old_score - new_score
-            
-        
+                
         # check validity of new position and improvement
         if valid == 1 or improvement < 0:
             counter_max_repeats += 1

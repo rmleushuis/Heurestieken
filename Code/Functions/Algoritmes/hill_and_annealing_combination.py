@@ -1,7 +1,8 @@
 """
-This function first uses a stochastic hill climbing algorithm to find a maximum.
-To reduce the change that it is a local maxima, it then uses a simulated 
-annealing algorithm.
+This file contains a functions which first uses a stochastic hill climbing 
+algorithm to find a (local) maximum. To reduce the chance of it being a local 
+maximum, it then uses a simulated annealing algorithm in order to escape the
+local maximum.
  
 Input:
     houses: the house class (containing the matrix)
@@ -24,14 +25,16 @@ Output:
 from stoch_hill_climb import stoch_steepest_hill
 from simulated_annealing import sim_ann
 
-def hill_ann_combi(houses, total_it, start_temp, end_temp, max_same_improvement, 
-                   same_improvement, max_times, method):
+def hill_ann_combi(houses, total_it, start_temp, end_temp,
+                   max_same_improvement, same_improvement,
+                   max_times, method):
     """" This is the function that is called when a user wants to perform the 
          combi algorithm. """
     
     # start with stochastic steepest hill climbing
     print('Starting with stochastic steepest hill climbing')
-    mat, local_max = stoch_steepest_hill(houses, total_it, max_same_improvement, 
+    mat, local_max = stoch_steepest_hill(houses, total_it,
+                                         max_same_improvement, 
                                          same_improvement)
     
     # counter for the number of times the algorithm is repeated

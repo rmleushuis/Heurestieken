@@ -9,11 +9,15 @@ WATER_PERC = 0.20
 
 # define the grid and the different houses
 GRID = {'width': 160, 'height': 180}
-HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2, 'price': 285000, 'interest': 0.03},
-               '2': {'height': 10,'width': 7.5,'free': 3, 'price': 399000, 'interest': 0.04},
-               '3': {'height': 11,'width': 10.5,'free': 4, 'price': 610000, 'interest': 0.06},
-               '4': {'height': 0,'width': 0,'free': 0, 'price': 0, 'interest': 0,
-                     'height_width_ratio_min': 1, 'height_width_ratio_max': 4}}
+HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2, 'price': 285000,
+                     'interest': 0.03},
+               '2': {'height': 10,'width': 7.5,'free': 3, 'price': 399000,
+                     'interest': 0.04},
+               '3': {'height': 11,'width': 10.5,'free': 4, 'price': 610000,
+                     'interest': 0.06},
+               '4': {'height': 0,'width': 0,'free': 0, 'price': 0,
+                     'interest': 0, 'height_width_ratio_min': 0.25,
+                     'height_width_ratio_max': 4}}
 
 WATER_M2 = WATER_PERC * ( GRID['width'] * GRID['height'] )
 MAX_WATERS = 4
@@ -49,10 +53,12 @@ ALGOS = ["stoch", "sim", "combi", "minmax", "all"]
 STARTING_STEP_SIZE = 12 
 
 # maximum number of attempts to find improvement allowed
-MAX_REPEATS_STOCH = 4
+MAX_REPEATS = 4
 
 # python function depth limit
 PYTHON_DEPTH = 21
 
-
-
+# optimum values from upper bound (number of houses, kind : optimum)
+OPTIMUM = {'20': {'1': 7, '2': 23, '3': 63},
+           '40': {'1': 3, '2': 13, '3': 39},
+           '60': {'1': 0.5, '2': 8, '3': 29}}

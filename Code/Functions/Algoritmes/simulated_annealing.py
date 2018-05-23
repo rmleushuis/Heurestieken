@@ -1,6 +1,6 @@
 """
-This function uses a simulated annealing algorithm to try to find the maxmum 
-profit that can be obtained.
+This file contains functions which form a simulated annealing algorithm which
+tries to find the maxmum profit that can be obtained.
  
 Input:
     houses: the house class (containing the matrix)
@@ -26,17 +26,23 @@ from check_house import check_house
 from gen_improvement import gen_improv
 from printing_progress import print_progress, print_convergence    
 
+# import global variables
+from global_vars import MAX_REPEATS, PYTHON_DEPTH, STARTING_STEP_SIZE
+
 def sim_ann(houses, N, T0, TN, max_same_improvement, criteria, tem_function):
-    """" This is the function that is called when a user wants to perform the 
-         simulated annealing algorithm. It continues to improve the solution
-         untill the maximum number of iterations is reached or until the
-         algorithm might be stuck in a (local) maximum. """
+    """ This function is called when a user wants to perform the 
+        simulated annealing algorithm. It continues to improve the solution
+        untill the maximum number of iterations is reached or until the
+        algorithm might be stuck in a (local) maximum. """
     
     # counter for the iteration round
     n = 0
     
     # counter for max_same_improvement
     counter_same_improv = 0
+    
+    # counter for how often a step can be repeated
+    counter_repeated = 0
     
     # boolean that is true if the algrithm might be in a (local) maximum
     local_max = 0
@@ -46,31 +52,24 @@ def sim_ann(houses, N, T0, TN, max_same_improvement, criteria, tem_function):
         # store the old profit value
         old_value = houses.compute_value().copy()
         
-        # MOET NOG GEDAAN WORDEN: ---------------------------------------
         if n == 0:
-            alpha = 4
-            beta = 4
-            eps = 4
-            magni = alpha + beta + eps
-            mat, improvement = sim_ann_step(houses, n, N, T0, TN, magni, tem_function)
-            old_value = houses.compute_value().copy()
+            
+            # in the first iteration the variable step size is fixed to
+            # STARTING_STEP_SIZE
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, 
+                                    STARTING_STEP_SIZE, tem_function,
+                                    counter_repeated)
         else:
-            # function which account for the position of the step in the total number of steps
-            alpha = (N/n)**(1/3) * 50 * (20/houses.total_houses)**2
-            # function which account for past improvement
-            beta = improvement/old_value * 100
-            # random component to change possible direction
-            epsilon = np.random.uniform(low = 0 , high = 0.5*(alpha + beta))
-            # calculate total range
-            magni = 1/10 * (alpha + beta + epsilon)
-            if magni<0:
-                magni = - magni
-            else:
-                magni = magni
-            mat, improvement = sim_ann_step(houses, n, N, T0, TN, magni, tem_function)
-            houses.compute_value()
-        # TOT HIER------------------------------------------------------------
-        
+            
+            # calculate variable step size as a function of momentum and
+            # decaying learning rate and trend breaker term
+            magni = determine_stepsize(N, houses, old_value, n,
+                                improvement)
+            
+            # calculate new improvement 
+            mat, improvement = sim_ann_step(houses, n, N, T0, TN, magni,
+                                            tem_function, counter_repeated)
+
         # check if the improvement is 'small' and adjust the counter
         if improvement < criteria:
             counter_same_improv += 1
@@ -94,16 +93,13 @@ def sim_ann(houses, N, T0, TN, max_same_improvement, criteria, tem_function):
     return houses.get_house_matrix()
 
 
-def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
+def sim_ann_step(houses, n, N, T0, TN, magni, tem_function, counter_repeated):
     """" This is the function that is called in each iteration step of the
          simulated annealing algorithm. It chooses a random house and 
          tries to improve the profit by altering the position of that house."""
     
     # choose a random house to move
     house = random.randint(houses.water_num, houses.total_houses + houses.water_num - 1)
-    
-    # GLOBAL MAKEN?????????????????
-    max_repeats = 4
     
     # counter for checking if the number of max_repeats is reached for
     # the choosen house
@@ -145,7 +141,7 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
                 improv_chance = math.exp(improvement/curr_temp)
                 
                 # determine if the negative improvement is accepted
-                if improv_chance > np.random.uniform(low=0, high=1):
+                if improv_chance > np.random.uniform(low = 0, high = 1):
                     improvement = 10
         
         # check validity of new position and acceptance 
@@ -155,11 +151,23 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function):
             
             # restore the old position
             houses.set_house_distance(matrix_old)
-     
-            # continue until max_repeats is reached
-            if max_repeats == counter_max_repeats:
-                matrix_improv = matrix_old
+            
+            # when the maximum number of tries for this house is reached
+            # try to improve by chaning the position of another house
+            if counter_max_repeats == MAX_REPEATS:
+                counter_repeated += 1
+                
+                # choose new house and try again untill PYTHON_DEPTH is reached
+                if counter_repeated < PYTHON_DEPTH:
+                    matrix_improv, improvement = sim_ann_step(houses, n, N, T0,
+                                                    TN, magni, tem_function,
+                                                    counter_repeated)
+                else:
+                    # return the old matrix
+                    matrix_improv = matrix_old
+                    improvement = 0
                 break
+            
 
     return matrix_improv, improvement
 
@@ -168,7 +176,25 @@ def temp(T0, TN, n, N, needed_cooling_scheme):
          scheme. It returns the right current temperature. """
          
     TEMP = {'lin': T0 - n*(T0 - TN)/N,
-           'exp': T0*math.pow((TN/T0),(n/N)),
-           'sig': TN + (T0-TN)/(1 + math.exp(0.3*(n-N/2))),
+           'exp': T0*math.pow((TN/T0), (n/N)),
+           'sig': TN + (T0-TN)/(1 + math.exp(0.3 * (n - N/2))),
            'geman': T0/(math.log(n + 1.005))}
     return TEMP[needed_cooling_scheme]
+
+def determine_stepsize(max_it, houses, old_value, n , improvement):
+    """" This function returns the bounds for the step size that can be choosen
+         to alter the position of a house. """
+    
+    # function that decreases with the number of iterations
+    alpha = (max_it/n)**(1/3) * 50 * (20/houses.total_houses)**2
+    
+    # function that increases with the hight of the previous improvement
+    beta = improvement/old_value * 100
+    
+    # random component to change trend direction
+    epsilon = np.random.uniform(low = 0 , high = 0.5 * (alpha + beta))
+    
+    # calculate total range
+    step_size = abs(0.1 * (alpha + beta + epsilon) )
+    
+    return step_size

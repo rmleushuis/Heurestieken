@@ -1,6 +1,6 @@
 """
-This function uses a stochastic steepest hill climbing algorithm to try to 
-find the maximum profit that can be obtained.
+This file contains functions which form a stochastic steepest hill climbing 
+algorithm which attempts to find the maximum profit that can be obtained.
  
 Input:
     houses: the house class (containing the matrix)
@@ -25,7 +25,7 @@ from gen_improvement import gen_improv
 from printing_progress import print_progress, print_convergence
 
 # import global variables
-from global_vars import STARTING_STEP_SIZE, MAX_REPEATS_STOCH, PYTHON_DEPTH
+from global_vars import STARTING_STEP_SIZE, MAX_REPEATS, PYTHON_DEPTH
 
 def stoch_steepest_hill(houses, max_it, max_same_improvement, criteria):
     """" This is the function that is called when a user wants to perform the 
@@ -142,7 +142,7 @@ def stoch_steepest_hill_step(houses, magni, counter_repeated):
             
             # when the maximum number of tries for this house is reached
             # try to improve by chaning the position of another house
-            if counter_max_repeats == MAX_REPEATS_STOCH:
+            if counter_max_repeats == MAX_REPEATS:
                 counter_repeated += 1
                 
                 # choose new house and try again untill PYTHON_DEPTH is reached
