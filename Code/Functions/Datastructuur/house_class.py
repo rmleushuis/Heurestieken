@@ -6,7 +6,7 @@ on this matrix.
 
 # import global vars
 from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID
-from global_vars import HOUSE_CHARS, DIST2, DIST, MAX_WATERS
+from global_vars import HOUSE_CHARS, DIST2, DIST, MAX_WATERS, COLUMN_DEFS
 
 # import start solution class
 from start_sol import Start_sol
@@ -65,18 +65,8 @@ class House(object):
                       }
         self.constant_columns = ['height', 'width', 'free', 'price',
                                  'interest']
-        self.column_defs = {'x1': 0,
-                       'y1': 1,
-                       'x2': 2,
-                       'y2': 3,
-                       'type': 4,
-                       'rotated': 5,
-                       'distance': 6,
-                       'height': 7,
-                       'width': 8,
-                       'free': 9,
-                       'price': 10,
-                       'interest': 11}
+        
+        self.column_defs = COLUMN_DEFS
         
         self.grid_index = {'bottom': -1,
                           'left': -4,
