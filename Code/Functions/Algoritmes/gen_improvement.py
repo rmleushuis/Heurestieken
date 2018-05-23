@@ -8,9 +8,6 @@ Output:
     house matrix with changed location of houses
 """
 
-# import global vars
-from global_vars import COLUMN_DEFS
-
 # import necessary modules
 import numpy as np
 import random
@@ -43,13 +40,13 @@ def move_house(matrix, house, magni):
     improv_y = np.random.uniform(low = - magni , high = magni)
     
     # change the matrix coordinates to match improvement step
-    matrix[house, COLUMN_DEFS['x1']] += improv_x
-    matrix[house, COLUMN_DEFS['y1']] += improv_y
-    matrix[house, COLUMN_DEFS['x2']] += improv_x
-    matrix[house, COLUMN_DEFS['y1']] += improv_y
+    matrix[house, 0] += improv_x
+    matrix[house, 1] += improv_y
+    matrix[house, 2] += improv_x
+    matrix[house, 3] += improv_y
     
-    # change whether the house is rotated 90 degrees (1 for yes, 0 for no)
-    matrix[house, COLUMN_DEFS['rotated']] = random.randint(0, 1)
+    # change whether the house is truned 90 degrees (1 for yes, 0 for no)
+    matrix[house, 5] = random.randint(0, 1)
     
     return matrix
 
@@ -67,15 +64,13 @@ def swap(matrix, house, waternum):
         if matrix[house_num, 4] != matrix[house, 4] and matrix[house, 4] != 4 :
             
             # temporary store coordinates of a house to use in the swap
-            x1_copy = matrix[house_num, COLUMN_DEFS['x1']]
-            y1_copy = matrix[house_num, COLUMN_DEFS['y1']]
+            x1_copy = matrix[house_num, 0]
+            y1_copy = matrix[house_num, 1]
             
             # change house 1
-            matrix[house_num, COLUMN_DEFS['x1']] = matrix[house,
-                                                      COLUMN_DEFS['x1']]
-            matrix[house_num, COLUMN_DEFS['y1']] = matrix[house,
-                                                      COLUMN_DEFS['y1']]
-            r = matrix[house_num, COLUMN_DEFS['rotated']]
+            matrix[house_num, 0] = matrix[house, 0]
+            matrix[house_num, 1] = matrix[house, 1]
+            r = matrix[house_num, 5]
             matrix[house_num, 2] = matrix[house_num, 0] + (1 - r) * \
                                    matrix[house_num, 7] + r * \
                                    matrix[house_num, 8]
