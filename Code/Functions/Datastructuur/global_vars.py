@@ -1,6 +1,8 @@
 """
-This file has all global variables which are used in other python documents.
+This file contains all global variables which are used in all other python 
+documents.
 """
+
 # distribution of houses on the grid
 PERC_SOLO = 0.6
 PERC_BUNG = 0.25
@@ -19,10 +21,14 @@ HOUSE_CHARS = {'1': {'height': 8, 'width': 8 , 'free': 2, 'price': 285000,
                      'interest': 0, 'height_width_ratio_min': 0.25,
                      'height_width_ratio_max': 4}}
 
+# water parameters as defined in the case
 WATER_M2 = WATER_PERC * ( GRID['width'] * GRID['height'] )
 MAX_WATERS = 4
-
 WATER_M2_REMAINING = WATER_M2
+
+# define border values for raio for the water bodies
+LOWER_RATIO = 0.25
+UPPER_RATIO = 4
 
 # define which column of the matrix the minimum distance function should grab
 # for house i
@@ -77,3 +83,11 @@ COLUMNS = {'x1': 0,
            'free': 9,
            'price': 10,
            'interest': 11}
+
+# maximum number of attempts to find starting solution
+MAX_START = 40000
+
+# maximum time that should be spend on placing house in starting solution
+MAX_TIME = 20
+
+
