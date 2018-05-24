@@ -107,13 +107,15 @@ def min_score_step(houses, n, N, magni, tot_houses):
     old_score = 0
     for h in range(houses.water_num, tot_houses+houses.water_num):
         old_dist = matrix_old[h][6] - matrix_old[h][9]
-        old_score += abs(OPTIMUM[str(tot_houses)][str(int(matrix_old[h][4]))] - old_dist)
+        old_score += abs(OPTIMUM[str(tot_houses)][str(int(matrix_old[h][4]))] \
+                                 - old_dist)
     
     while improvement < 0:
         
         # generate copy of the matrix to try improvements on
         matrix_copy = houses.get_house_matrix().copy()
-        matrix_improv = gen_improv(matrix_copy, house, magni, 1, houses.water_num)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 1,
+                                   houses.water_num)
         
         # calculate distance
         valid, distance = check_house(house, houses.water_num, matrix_improv)

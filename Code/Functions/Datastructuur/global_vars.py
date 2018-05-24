@@ -62,3 +62,18 @@ PYTHON_DEPTH = 21
 OPTIMUM = {'20': {'1': 7, '2': 23, '3': 63},
            '40': {'1': 3, '2': 13, '3': 39},
            '60': {'1': 0.5, '2': 8, '3': 29}}
+
+
+# define names of the columns
+COLUMNS = {'x1': 0,
+           'y1': 1,
+           'x2': 2,
+           'y2': 3,
+           'type': 4,
+           'rotated': 5,
+           'distance': 6,
+           'height': 7,
+           'width': 8,
+           'free': 9,
+           'price': 10,
+           'interest': 11}

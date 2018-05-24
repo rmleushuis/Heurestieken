@@ -6,7 +6,7 @@ on this matrix.
 
 # import global vars
 from global_vars import PERC_SOLO, PERC_BUNG, PERC_VIL, GRID
-from global_vars import HOUSE_CHARS, DIST2, DIST, MAX_WATERS
+from global_vars import HOUSE_CHARS, DIST2, DIST, MAX_WATERS, COLUMNS
 
 # import start solution class
 from start_sol import Start_sol
@@ -40,51 +40,40 @@ class House(object):
         """
         """ This function initializes the class."""
         
-        if type(total_houses) is not int:
-            try:
-                total_houses = int(total_houses)
-            except:
-                print("please insert a integer amount of houses!")
-        
+        # intitialize basic characteristics
         self.total_houses = total_houses
         self.water_num = 0
         self.value = 0
         self.matrix = None
-        
         self.grid_width = GRID['width']
         self.grid_height = GRID['height']
         
+        # define the 8 planes around the house
         self.conditions = {'right': self.right,
-                      'lower_right': self.lower_right,
-                      'lower': self.lower,
-                      'lower_left': self.lower_left,
-                      'left': self.left,
-                      'upper_left': self.upper_left,
-                      'upper': self.upper,
-                      'upper_right': self.upper_right
-                      }
+                           'lower_right': self.lower_right,
+                           'lower': self.lower,
+                           'lower_left': self.lower_left,
+                           'left': self.left,
+                           'upper_left': self.upper_left,
+                           'upper': self.upper,
+                           'upper_right': self.upper_right
+                           }
+        
+        # make dictionaries with column names
         self.constant_columns = ['height', 'width', 'free', 'price',
                                  'interest']
-        self.column_defs = {'x1': 0,
-                       'y1': 1,
-                       'x2': 2,
-                       'y2': 3,
-                       'type': 4,
-                       'rotated': 5,
-                       'distance': 6,
-                       'height': 7,
-                       'width': 8,
-                       'free': 9,
-                       'price': 10,
-                       'interest': 11}
+        self.column_defs = COLUMNS
         
+        # define grid indices
         self.grid_index = {'bottom': -1,
-                          'left': -4,
-                          'right': -2,
-                          'top': -3}
+                           'left': -4,
+                           'right': -2,
+                           'top': -3}
         
+        
+        # define categories for type of free space
         self.index_free = {'others': 0,
-                      'current': 1}
+                           'current': 1}
         
         # initialize matrix with class function
         self.create_house_matrix()
@@ -94,25 +83,27 @@ class House(object):
             self.create_water_planes()  
             self.total_length = self.water_num + self.total_houses
             if verbose == True:
-                print("Water elements created")
+                print("Water elements created.")
         else:
             if verbose:
-                print("No water elements created")
+                print("No water elements created.")
             
         # create houses and compute total value
         if create_houses:
-            self.matrix = Start_sol(self.matrix, self.water_num).fill_house_matrix()
+            self.matrix = Start_sol(self.matrix,
+                                    self.water_num).fill_house_matrix()
             self.set_house_distance(self.matrix)
             self.value = self.compute_value()
             if verbose:
-                print("House elements created")
+                print("House elements created.")
         else:
             if verbose:
-                print("No house elements created")
-    
-    """ Create a random amount of water bodies and gives them
-        feasible coordinates. """        
+                print("No house elements created.")
+          
+            
     def create_water_planes(self):
+        """ Create a random amount of water bodies and gives them
+        feasible coordinates. """  
         
         # create random water body amount
         random_water = random.randint(1, MAX_WATERS)
@@ -155,20 +146,24 @@ class House(object):
             while True:
             
                 # fill class matrix with characteristics and position of water
-                new_matrix[i, self.column_defs['x1']] = np.random.uniform(low = 0 , high = self.grid_width-width)
-                new_matrix[i, self.column_defs['y1']] = np.random.uniform(low = height, high = self.grid_height)
-                new_matrix[i, self.column_defs['x2']] = new_matrix[i, self.column_defs['x1']] + width
-                new_matrix[i, self.column_defs['y2']] = new_matrix[i, self.column_defs['y1']] - height
+                new_matrix[i, self.column_defs['x1']] = np.random.uniform(
+                        low = 0 , high = self.grid_width-width)
+                new_matrix[i, self.column_defs['y1']] = np.random.uniform(
+                        low = height, high = self.grid_height)
+                new_matrix[i, self.column_defs['x2']] = new_matrix[i,
+                          self.column_defs['x1']] + width
+                new_matrix[i, self.column_defs['y2']] = new_matrix[i,
+                          self.column_defs['y1']] - height
                 new_matrix[i, self.column_defs['type']] = 4
-                new_matrix[i, self.column_defs['rotated']] = random.randint(0, 1)
+                new_matrix[i, self.column_defs['rotated']] = random.randint(
+                        0, 1)
                 new_matrix[i, self.column_defs['height']] = height
                 new_matrix[i, self.column_defs['width']] = width
                 
                 
                 # check if location is valid
                 if i > 0:
-                    d = self.distancesf(i, new_matrix[:(i+1)], start = 1)
-                    
+                    d = self.distancesf(i, new_matrix[:(i + 1)], start = 1)
                     if d:
                         break
                 else:
@@ -178,9 +173,10 @@ class House(object):
         self.matrix = new_matrix
         self.water_num = random_water
         
-    """" Create the house matrix filled with houses including their
-         characteristics. """
+        
     def create_house_matrix(self):
+        """ Create the house matrix filled with houses including their
+             characteristics. """
         
         # define the amount of columnns needed
         column_len = len(self.column_defs)
@@ -198,24 +194,30 @@ class House(object):
         # shuffle houses in order to avoid bias in starting solutions
         np.random.shuffle(matrix[:, self.column_defs['type']])
         
-        # group the individualvectors of the constant characteristics for each house
+        # group the individual vectors of the characteristics for each house
         for const_col in self.constant_columns:
-            matrix[:, self.column_defs[const_col]] =  np.vectorize(lambda x: float(HOUSE_CHARS[str(int(x))][const_col]))(matrix[:, self.column_defs['type']])
+            matrix[:, self.column_defs[const_col]] =  np.vectorize(lambda x: 
+                     float(HOUSE_CHARS[str(int(x))][const_col]))(matrix[:,
+                     self.column_defs['type']])
         
         self.matrix = matrix
     
-    """ Return the matrix containing the houses and water bodies."""
+    
     def get_house_matrix(self):
+        """ Return the matrix containing the houses and water bodies."""
         return self.matrix
     
-    """ Change the matrix containing the houses and water bodies
+
+    def set_house_distance(self, matrix):
+        """ Change the matrix containing the houses and water bodies
         and calculates the distances in column 6, which need to be recalculated
         for the new matrix. """
-    def set_house_distance(self, matrix):
         
+        # check if matrix is a valid one
         if matrix.shape[0] is not self.total_length:
             print("You are trying to pass an invalid matrix for this instance")
             return 0
+        
         # make empty list to fill up with minimum distances
         distancess = []
         # loop through every house (non water body) and calculate distance
@@ -228,18 +230,26 @@ class House(object):
         
         # change the matrix with the new distances
         self.matrix = matrix
+              
         
-    """ This function calculates the total value of the grid accounting for the
-        free distance between houses and the different types of houses."""        
     def compute_value(self):
+        """ This function calculates the total value of the grid accounting for
+        the free distance between houses and the different types of houses."""  
+        
         matrix = self.matrix
-        self.value = sum(matrix[:, self.column_defs['price']] * (1 + matrix[:, self.column_defs['distance']] * matrix[:, self.column_defs['interest']]))
+        
+        # calculate total value of the grid
+        self.value = sum(matrix[:, self.column_defs['price']] * (1 + matrix[:,
+                         self.column_defs['distance']] * matrix[:,
+                         self.column_defs['interest']]))
         
         return self.value 
 
-    """ This function creates a class for a visualisation of the grid containing
-        all houses and water bodies."""    
+   
     def show_house_grid(self):
+        """ This function creates a class for a visualisation of the grid
+        containing all houses and water bodies.""" 
+        
         # create grid object
         show_grid = Show_grid()
         
@@ -247,126 +257,162 @@ class House(object):
         for it in range(self.total_length):
             show_grid.draw_house(self.matrix[it, :], it)
             
+            
     def upper_right(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        upper right plane.""" 
         
+        # get coordinates and side specifications
         x1 = positions['x1']
         y2 = positions['y2']
-        
         right_side = sides['right']
         top_side = sides['upper']
         
+        # check whether this distance is valid
         upper_right = np.logical_and(x1 > right_side, y2 > top_side)
         
         return upper_right
     
     def lower_right(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        lower right plane.""" 
         
+        # get coordinates and side specifications
         x1 = positions['x1']
         y1 = positions['y1']
-        
         right_side = sides['right']
         bottom_side = sides['bottom']
         
+        # check whether this distance is valid
         lower_right = np.logical_and(x1 > right_side, y1 < bottom_side)
         
         return lower_right
     
     def right(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        right plane.""" 
         
+        # get coordinates and side specifications
         x1 = positions['x1']
         y1 = positions['y1']
         y2 = positions['y2']
-        
         right_side = sides['right']
         top_side = sides['upper']
         bottom_side = sides['bottom']
         
-        right = np.logical_and(x1 > right_side, np.logical_and(y2 <= top_side, y1 >= bottom_side))
+        # check whether this distance is valid
+        right = np.logical_and(x1 > right_side, np.logical_and(y2 <= top_side,
+                               y1 >= bottom_side))
     
         return right
     
     def upper_left(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        upper left plane.""" 
         
+        # get coordinates and side specifications
         x2 = positions['x2']
         y2 = positions['y2']
-        
         left_side = sides['left']
         top_side = sides['upper']
         
+        # check whether this distance is valid
         upper_left = np.logical_and(x2 < left_side, y2 > top_side)
         
         return upper_left
     
     def lower_left(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        lower left plane.""" 
         
+        # get coordinates and side specifications
         x2 = positions['x2']
         y1 = positions['y1']
-        
         left_side = sides['left']
         bottom_side = sides['bottom']
         
+        # check whether this distance is valid
         lower_left = np.logical_and(x2 < left_side, y1 < bottom_side)
         
         return lower_left
     
     def left(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        left plane.""" 
         
+        # get coordinates and side specifications
         x2 = positions['x2']
         y1 = positions['y1']
         y2 = positions['y2']
-        
         left_side = sides['left']
         top_side = sides['upper']
         bottom_side = sides['bottom']
         
-        left = np.logical_and(x2 < left_side, np.logical_and(y2 <= top_side, y1 >= bottom_side))
+        # check whether this distance is valid
+        left = np.logical_and(x2 < left_side, np.logical_and(y2 <= top_side,
+                              y1 >= bottom_side))
         
         return left
     
     def upper(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        upper plane.""" 
         
+        # get coordinates and side specifications
         x1 = positions['x1']
         x2 = positions['x2']
         y2 = positions['y2']
-        
         left_side = sides['left']
         top_side = sides['upper']
         right_side = sides['right']
         
-        upper = np.logical_and(y2 > top_side, np.logical_and(x2 >= left_side, x1 <= right_side))
+        # check whether this distance is valid
+        upper = np.logical_and(y2 > top_side, np.logical_and(x2 >= left_side,
+                               x1 <= right_side))
         
         return upper
     
     def lower(self, sides, positions):
+        """ This function calculates and checks the minimum distance in the 
+        lower plane.""" 
         
+        # get coordinates and side specifications
         x1 = positions['x1']
         x2 = positions['x2']
         y1= positions['y1']
-        
         left_side = sides['left']
         right_side = sides['right']
         bottom_side = sides['bottom']
         
-        lower = np.logical_and(y1 < bottom_side, np.logical_and(x2 >= left_side, x1 <= right_side))
+        # check whether this distance is valid
+        lower = np.logical_and(y1 < bottom_side,
+                               np.logical_and(x2 >= left_side,
+                               x1 <= right_side))
         
         return lower
     
+    
     def grid_conditions(self, positions, free_space_cur):
+        """ This function checks whether the house or water plane is within 
+        the grid.""" 
         
+        # check whether it is not outside of the borders of the neighbourhood
         left = positions['x1'] >= free_space_cur
         right = positions['x2'] <= (self.grid_width - free_space_cur)
         top = positions['y1'] <= (self.grid_height - free_space_cur)
         bottom = positions['y2'] >= free_space_cur
         
+        # make an array of the booleans
         grid_conditions = np.array([left, right, bottom, top])
         
         return grid_conditions
         
         
-    """ This function evaluates whether none of the free space conditions are
-        violated and calculates the minimum distance between houses.""" 
     def distancesf(self, loc, matrix, start = 0):
+        """ This function evaluates whether none of the free space conditions
+        are violated and calculates the minimum distance between houses.""" 
         
+        # make copy of the matrix to avoid pointers
         matrix = matrix.copy()
         
         # obligated free space of the current house
@@ -383,7 +429,8 @@ class House(object):
         house_free_space = temp[:, self.column_defs['free']]
         
         
-        free_space = np.ones((len(house_free_space), len(self.index_free))) * free_space_cur
+        free_space = np.ones((len(house_free_space), len(self.index_free))) * \
+                              free_space_cur
         free_space[:, self.index_free['others']] = house_free_space
         
         # allow houses to be placed directly to the water
@@ -402,7 +449,7 @@ class House(object):
         areas around a house, as defined in the comment visualisation below.
         """
         # UL # U # UR
-        # L # H # R
+        # L # House # R
         # LL # L # LR
         
         all_conditions = []
@@ -421,7 +468,7 @@ class House(object):
             if start:
                 return 1
             
-            # remove water bodies as they have no influence on the minimal distance
+            # remove water bodies as they have no influence on minimal distance
             all_conditions = all_conditions[:, self.water_num:]
             temp = temp[self.water_num:]
             
@@ -429,7 +476,8 @@ class House(object):
             distance_ind = np.argmax(all_conditions, axis = 0)
             
             # make an empty distance vector (houses + grid distances)
-            distances = np.array([0.0] * (len(distance_ind) + grid_cond.shape[0]))
+            distances = np.array([0.0] * (len(distance_ind) +
+                                 grid_cond.shape[0]))
             
             # calculate the minimum distance of the house to other houses
             positions = np.array(list(positions_.values()))
@@ -439,7 +487,8 @@ class House(object):
                 plane = distance_ind[i]
                 
                 # 2d vector of the differences in x and y position
-                m = np.abs(positions[DIST2[str(plane)]] - temp[i, DIST[str(plane)]]) 
+                m = np.abs(positions[DIST2[str(plane)]] -
+                           temp[i, DIST[str(plane)]]) 
 
                 # use the corresponding distance measure
                 if not plane % 2:
@@ -448,13 +497,18 @@ class House(object):
                     distances[i] = np.sqrt(np.dot(m, m)) - free_space_cur
             
             # calculate grid distances
-            
-            distances[self.grid_index['bottom']] = positions_['y2'] - free_space_cur
-            distances[self.grid_index['right']] = self.grid_width- (free_space_cur + positions_['x2'])
-            distances[self.grid_index['top']] = self.grid_height - (free_space_cur + positions_['y1'])
-            distances[self.grid_index['left']] = positions_['x1'] - free_space_cur
+            distances[self.grid_index['bottom']] = positions_['y2'] - \
+                                                   free_space_cur
+            distances[self.grid_index['right']] = self.grid_width - \
+                                                  (free_space_cur + \
+                                                   positions_['x2'])
+            distances[self.grid_index['top']] = self.grid_height - \
+                                                (free_space_cur + \
+                                                 positions_['y1'])
+            distances[self.grid_index['left']] = positions_['x1'] - \
+                                                 free_space_cur
+                                                 
             # return valid and the minimal distance
-#            print(distances)
             return np.min(distances)
         
         # if conditions are not satisfied return not valid

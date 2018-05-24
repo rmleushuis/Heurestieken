@@ -12,7 +12,6 @@ from global_vars import GRID
 
 # import functions from other documents
 from check_house import check_house
-from draw_plan import Show_grid
 import time
 
 # import necessary modules

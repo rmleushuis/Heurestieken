@@ -32,11 +32,6 @@ def check_house(house, water_num, house_mat, start = 0):
     top_side = filled_houses_mat[:, 1] 
     bottom_side = filled_houses_mat[:, 3]
     
-    sides = {'right': right_side,
-             'left': left_side,
-             'top': top_side,
-             'bottom': bottom_side}
-    
     free_space = np.ones((len(house_free_space), 2)) * free_space
 
     free_space[:, 0] = house_free_space

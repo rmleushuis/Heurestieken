@@ -98,11 +98,17 @@ def main():
     total_houses = input("Number of houses would you like to optimize: ")
     
     # check if user provided integer
-    try:
-        total_houses = int(total_houses)
-    except:
-        print("Invalid characters. Stick to integers.")
-        total_houses = int(input("Number of houses would you like to optimize: "))
+    while True:
+        try:
+            total_houses = int(total_houses)
+            break
+        except:
+            print("Invalid characters. Stick to integers.")
+            total_houses = input("Number of houses would you like to optimize: ")
+            try:
+                total_houses= int(total_houses)
+            except:
+                continue
     
     # check if selected version is a valid one
     while total_houses != 20 and total_houses != 40 and total_houses != 60:

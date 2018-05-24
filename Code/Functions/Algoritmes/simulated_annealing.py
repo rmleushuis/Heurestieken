@@ -99,7 +99,8 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function, counter_repeated):
          tries to improve the profit by altering the position of that house."""
     
     # choose a random house to move
-    house = random.randint(houses.water_num, houses.total_houses + houses.water_num - 1)
+    house = random.randint(houses.water_num, houses.total_houses + 
+                           houses.water_num - 1)
     
     # counter for checking if the number of max_repeats is reached for
     # the choosen house
@@ -118,7 +119,8 @@ def sim_ann_step(houses, n, N, T0, TN, magni, tem_function, counter_repeated):
         matrix_copy = houses.get_house_matrix().copy()
         
         # generate an improvement
-        matrix_improv = gen_improv(matrix_copy, house, magni, 0, houses.water_num)
+        matrix_improv = gen_improv(matrix_copy, house, magni, 0,
+                                   houses.water_num)
         
         # calculate distance
         valid, distance = check_house(house, houses.water_num, matrix_improv)
