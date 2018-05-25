@@ -135,9 +135,9 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         print("min max", house.compute_value())
         house.show_house_grid()
     
-    print("\nThe optimal solutions of each algorithms are shown in the plots"
-          "below. The order of the plots is random, stochastic hill"
-          "simulated annealing, combination algorithm and minmax algorithm.")
+    print("\nThe optimal solutions of each algorithm are shown in the plots "
+          "below. The first plot is that of the random solution, the rest is "
+          "shown in the by the user chosen order.")
       
 def main():
     
