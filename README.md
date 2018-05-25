@@ -59,7 +59,7 @@ Om de code te draaien met de standaardconfiguratie gebruik de instructie:
 python main.py
 ```
 
-Vervolgens wordt je stap voor stap door de gehele procedure geleid.
+Vervolgens word je stap voor stap door de gehele procedure geleid.
 
 ## Auteurs
 
