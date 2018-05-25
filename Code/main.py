@@ -22,6 +22,7 @@ from stoch_hill_climb import stoch_steepest_hill
 from simulated_annealing import sim_ann
 from hill_and_annealing_combination import hill_ann_combi
 from min_max import min_max_alg
+from exhaustive_search import Exhaustive_search
 
 def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
     
@@ -133,6 +134,16 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
                           max_same_improvement, same_improvement, max_times,
                           total_houses, magni, method)
         print("min max", house.compute_value())
+        house.show_house_grid()
+
+    if 5 in idx_algorithm:
+                   
+        # run exhaustive search algorithm
+        mat_class = Exhaustive_search(mat, house)
+        mat_class.algo(verbose = 2)
+        house.show_house_grid()
+        
+        print("exhaustive search:", house.compute_value())
         house.show_house_grid()
     
     print("\nThe optimal solutions of each algorithm are shown in the plots "

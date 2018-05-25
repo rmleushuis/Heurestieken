@@ -10,7 +10,7 @@ import numpy as np
 from global_vars import GRID
 from draw_plan import Show_grid
 
-class LuuksAlgo():
+class Exhaustive_search():
     
     def __init__(self, matrix, house):
         """This function initializes the class."""
