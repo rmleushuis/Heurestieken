@@ -184,7 +184,9 @@ class LuuksAlgo():
             if old_value - start_value < 0.01:
                 print('Converged')
                 break
+            
         print('Did not converge')
+        print("exhaustive search: ", old_value)
         
         self.matrix_sorted = temp_matrix2
         
