@@ -136,16 +136,7 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         print("min max", house.compute_value())
         house.show_house_grid()
 
-    if 5 in idx_algorithm:
-                   
-        # run exhaustive search algorithm
-        mat_class = Exhaustive_search(mat, house)
-        mat_class.algo(verbose = 2)
-        house.show_house_grid()
-        
-        print("exhaustive search:", house.compute_value())
-        house.show_house_grid()
-    
+
     print("\nThe optimal solutions of each algorithm are shown in the plots "
           "below. The first plot is that of the random solution, the rest is "
           "shown in the by the user chosen order.")
@@ -195,9 +186,7 @@ def main():
     print("2) Simulated Annealing")
     print("3) Stochastic Hill Climber + Simulated Annealing (combination)")
     print("4) MinMax")
-    print("5) Exhaustive Search (takes up to 15 minutes" + 
-         "per epoch for 40 houses)\n")
-    
+  
     print("Enter the desired number(s) preliminary to the algorithm \n"
           "to run it. For example 123 will run the first second\n"
           "and third algorithm.")
@@ -205,10 +194,10 @@ def main():
         try:
             idx_algorithm = int(input("Algorithm: "))
             idx_algorithm = [int(d) for d in str(idx_algorithm)]
-            if all([d in range(1,6) for d in idx_algorithm]):
+            if all([d in range(1, 5) for d in idx_algorithm]):
                 break
         except:
-            print("Invalid input. Input must be 1,2,3,4,5 or 6!")
+            print("Invalid input. Input must be 1,2,3,4!")
             print("Try again")
             pass
     print("#####################################################") 
@@ -221,7 +210,7 @@ def main():
                 break
             print('\n')
         except:
-            print("Invalid input. Input must be 1,2,3,4 or 5!")
+            print("Invalid input. Input must be 1,2,3,4!")
             print("Try again")
             pass
     
