@@ -22,13 +22,13 @@ from stoch_hill_climb import stoch_steepest_hill
 from simulated_annealing import sim_ann
 from hill_and_annealing_combination import hill_ann_combi
 from min_max import min_max_alg
-from global_vars import ALGOS
 
 def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
     
     if a_par == None:
         
-        # max number of improvements which are allowed to be approximately the same
+        # max number of improvements which are allowed to be approximately 
+        # the same
         max_same_improvement = 5
         
         # treshold value for which improvements are approximately the same
@@ -38,12 +38,12 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         start_temp = 800
         end_temp = 0.01
        
-     
-        # extra parameter for combi; maximum number of times hill climbing can be applied
-        # and the number of times simulated annealing will be applied
+        # extra parameter for combi; maximum number of times hill climbing can
+        # be applied and the number times simulated annealing will be applied
         max_times = 3
         
-        # extra parameter for min max; the range to choose a step from in the minimizing stage
+        # extra parameter for min max; the range to choose a step from in the
+        # minimizing stage
         magni = 10
     method = 'exp'
        
@@ -58,6 +58,8 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
     mat_copy =  house.get_house_matrix().copy()
     
     if 1 in idx_algorithm:
+        
+        # stoch hill algorithm
         if a_par is not None:
             max_same_improvement = a_par[1][0]
             same_improvement = a_par[1][1]
@@ -71,8 +73,12 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         # reset matrix to starting solution
         house.set_house_distance(mat_copy)
         
-    if 2 in idx_algorithm:  
+    if 2 in idx_algorithm:
+        
+        # sim ann algorithm
         if a_par is not None:
+            
+            # set default parameters
             start_temp = a_par[2][0]
             end_temp = a_par[2][1]
             max_same_improvement = a_par[2][2]
@@ -88,15 +94,21 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         house.set_house_distance(mat_copy)
     
     if 3 in idx_algorithm:
+        
+        # combi algorithm
         if a_par is not None:
+            
+            # set default parameters
             start_temp = a_par[3][0]
             end_temp = a_par[3][1]
             max_same_improvement = a_par[3][2]
             same_improvement = a_par[3][3]
             max_times = a_par[3][4]
+            
         # combi algorithm
         mat = hill_ann_combi(house, number_it, start_temp, end_temp,
-                             max_same_improvement, same_improvement, max_times, method)  
+                             max_same_improvement, same_improvement, max_times,
+                             method)  
         print("combi", house.compute_value())
         house.show_house_grid()
         
@@ -104,21 +116,24 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
         house.set_house_distance(mat_copy)
         
     if 4 in idx_algorithm:
+        
         # min max algorithm
         if a_par is not None:
+            
+            # set default parameters
             start_temp = a_par[4][0]
             end_temp = a_par[4][1]
             max_same_improvement = a_par[4][2]
             same_improvement = a_par[4][3]
             max_times = a_par[4][4]
             magni = a_par[4][5]
-        mat = min_max_alg(house, number_it, start_temp, end_temp, max_same_improvement, 
-                          same_improvement, max_times, total_houses, magni, method)
+        
+        # run minmax algorithm
+        mat = min_max_alg(house, number_it, start_temp, end_temp,
+                          max_same_improvement, same_improvement, max_times,
+                          total_houses, magni, method)
         print("min max", house.compute_value())
         house.show_house_grid()
-        
-#def user_input():
-#    total_houses = input(')
 
 def main():
     
@@ -174,10 +189,11 @@ def main():
     print("2) Simulated Annealing")
     print("3) Stochastic ... + Simulated (combination)")
     print("4) MinMAX")
-    print("5) Semi-Exhausting Search (takes up to 15 minutes per epoch for 40 houses)\n")
+    print("5) Semi-Exhausting Search (takes up to 15 minutes" + 
+         "per epoch for 40 houses)\n")
     
     print("Enter the desired number(s) preliminary to the algorithm \n"
-          "to run it. For example 132 will run the first second\n"
+          "to run it. For example 123 will run the first second\n"
           "and third algorithm.")
     while True:
         try:
@@ -202,39 +218,42 @@ def main():
             print("Invalid input. Input must be 1,2,3,4 or 5!")
             print("Try again")
             pass
-        
+    
+    # specify parameters and algorithms    
     algs = {1: {'algo': 'stoch',
                 'params': {'max_same_improvement': int,
                            'same_improvement': int}},
-    2: {'algo': 'sim',
-        'params': {'start_temp': float,
-                   'end_temp': float,
-                   'max_same_improvement': int,
-                   'same_improvement': int}},
-    3: {'algo': 'combi',
-        'params': {'start_temp': float,
-                   'end_temp': float,
-                   'max_same_improvement': int,
-                   'same_improvement': int,
-                   'max_times': int}},
-    4: {'algo': 'minmax',
-        'params':  {'start_temp': float,
-                   'end_temp': float,
-                   'max_same_improvement': int,
-                   'same_improvement': int,
-                   'max_times': int,
-                   'magni': float}}}
+            2: {'algo': 'sim',
+                'params': {'start_temp': float,
+                           'end_temp': float,
+                           'max_same_improvement': int,
+                           'same_improvement': int}},
+            3: {'algo': 'combi',
+                'params': {'start_temp': float,
+                           'end_temp': float,
+                           'max_same_improvement': int,
+                           'same_improvement': int,
+                           'max_times': int}},
+            4: {'algo': 'minmax',
+                'params':  {'start_temp': float,
+                           'end_temp': float,
+                           'max_same_improvement': int,
+                           'same_improvement': int,
+                           'max_times': int,
+                           'magni': float}}}
     
+    # run code with default parameters
     if default == 'no':
+        
         a_par = {}
         for algorithm in idx_algorithm:
             algo = algs[algorithm]['algo']
             print(algo)
             params = algs[algorithm]['params']
            
+            # get parameters values
             f = ", ".join(list(params.keys()))
             print("Enter the parameters like '(" + f + ")'")
-            
             while True:
                 param = list(eval(input("Parameters: ")))
                 try:
@@ -244,44 +263,12 @@ def main():
                     break
                 except:
                     print("Parameter(s) are not valid. Try again.")
-                
             a_par[algorithm] = param
-            
+        
+        # run algorithms
         algorithms(num_houses, num_iterations, idx_algorithm, a_par)
     else:
         algorithms(num_houses, num_iterations, idx_algorithm)
 
-
 if __name__ == '__main__':
     main()
-# import necessary modules
-import os, sys
- 
-# add current structure to path
-directory = os.path.dirname(os.path.realpath("__file__"))
-sys.path.append(os.path.join(directory, "functions"))
-sys.path.append(os.path.join(directory, "functions/algoritmes"))
-sys.path.append(os.path.join(directory, "functions/controle"))
-sys.path.append(os.path.join(directory, "functions/datastructuur"))
-sys.path.append(os.path.join(directory, "functions/visualisatie"))
- 
-# import class
-from house_class import House
- 
-# import algorithms
-from stoch_hill_climb import stoch_steepest_hill
-from simulated_annealing import sim_ann
-from hill_and_annealing_combination import hill_ann_combi
-from min_max import min_max_alg
-from global_vars import ALGOS
-
-house = House(5, True, True)
-
-# print the value and the map from the random solution
-print("random", house.compute_value())
-house.show_house_grid()
-
-# save the random allocation as the starting solution
-mat_copy =  house.get_house_matrix().copy()
-    
-#   main()
