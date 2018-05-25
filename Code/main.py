@@ -164,15 +164,6 @@ def main():
             print("Try again")
             pass
     
-    house = House(num_houses, True, True)
-    
-    # print the value and the map from the random solution
-    print("random", house.compute_value())
-    house.show_house_grid()
-    
-    # save the random allocation as the starting solution
-    mat_copy =  house.get_house_matrix().copy()
-    
     # 1 minute corresponds to about 10 iterations when running all algorithms
     print("Enter the number of iterations (1-...)")
     while True:
@@ -189,11 +180,11 @@ def main():
     # user choses which algorithm runs
     print("#####################################################")
     print("Choose optimization algorithm(s):\n")
-    print("1) Stochastic ... ")
+    print("1) Stochastic Hill Climber ")
     print("2) Simulated Annealing")
-    print("3) Stochastic ... + Simulated (combination)")
-    print("4) MinMAX")
-    print("5) Semi-Exhausting Search (takes up to 15 minutes" + 
+    print("3) Stochastic Hill Climber + Simulated Annealing (combination)")
+    print("4) MinMax")
+    print("5) Exhaustive Search (takes up to 15 minutes" + 
          "per epoch for 40 houses)\n")
     
     print("Enter the desired number(s) preliminary to the algorithm \n"
@@ -259,7 +250,10 @@ def main():
             f = ", ".join(list(params.keys()))
             print("Enter the parameters like '(" + f + ")'")
             while True:
-                param = list(eval(input("Parameters: ")))
+                try:
+                    param = list(eval(input("Parameters: ")))
+                except:
+                    print("\n")
                 try:
                     for i, t in zip(range(len(params)), params.values()):
                         param[i] = t(param[i])
