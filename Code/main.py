@@ -134,7 +134,11 @@ def algorithms(total_houses, number_it, idx_algorithm, a_par = None):
                           total_houses, magni, method)
         print("min max", house.compute_value())
         house.show_house_grid()
-
+    
+    print("\nThe optimal solutions of each algorithms are shown in the plots"
+          "below. The order of the plots is random, stochastic hill"
+          "simulated annealing, combination algorithm and minmax algorithm.")
+      
 def main():
     
     # ask the user for input to select a version of the problem
@@ -268,6 +272,7 @@ def main():
         # run algorithms
         algorithms(num_houses, num_iterations, idx_algorithm, a_par)
     else:
+        # run algorithms
         algorithms(num_houses, num_iterations, idx_algorithm)
 
 if __name__ == '__main__':
