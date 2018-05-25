@@ -33,7 +33,7 @@ Omdat de Duivenderechtse polder ooit beschermd natuurgebied was, is de compromis
 3) In geval van percentuele waardevermeerdering per meter is de toename niet cumulatief. Een maison met twee meter extra vrijstand is dus 12.0% meer waard, niet 12.36%.
 
 ### Doel
-Lever een plattegrond (2D of 3D) af voor ieder van de drie huizenvarianten voor de nieuw te bouwen wijk Amstelhaege die de waarde van de wijk maximaliseert. De scores voor een plattegrond is de opgetelde waarde van alle huizen in de wijk.
+Lever een plattegrond (2D of 3D) af voor ieder van de drie huizenvarianten voor de nieuw te bouwen wijk Amstelhaege die de waarde van de wijk maximaliseert. De scores voor een plattegrond is de opgetelde waarde van alle huizen in de wijk inclusief de waardevermeerdering per extra meter vrijstand.
 
 ## Aan de slag 
 
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 Alle aantekeningen van college's en nota's van meetings met de Teaching Assistant (Quinten van der Post) staan in de folder Others. 
 Alle Python scripts staan in de folder Code. In de folder Functions binnen de folder Code staan alle functies en variabelen die in main.py geebruikt worden.
-Het folder Experiments bevat alle experimentele code. 
+De folder Experiments bevat alle experimentele code. 
 
 ### Test
 
@@ -58,6 +58,8 @@ Om de code te draaien met de standaardconfiguratie gebruik de instructie:
 ```
 python main.py
 ```
+
+Vervolgens wordt je stap voor stap door de gehele procedure geleid.
 
 ## Auteurs
 
